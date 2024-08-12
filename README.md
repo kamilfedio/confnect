@@ -1,4 +1,4 @@
-#confnect
+# confnect
 
 ## Description
 App dedicated to conferences, admins, managers etc. Usually at big events are sections where users can ask.
@@ -9,28 +9,28 @@ questions. What's more - participants can send feeback, ask for contact after me
 quizes, polls or other our features!
 
 ## Versions
-###0.0.1 - beta
+### 0.0.1 - beta
 - register via google
 - create events
 - generate invitation codes
 - ask live questions
 - send feedback
 
-###0.0.2
+### 0.0.2
 - view questions after meet
 - reply to questions after meet
 - notifications about new replies for attendances
 
-###0.0.3
+### 0.0.3
 - create votes
 - generate votes statistics
 
-###0.1.0
+### 0.1.0
 - send reviews
 - check admins profiles
 
-###0.1.1
+### 0.1.1
 - create polls
 
-###0.1.2 
+### 0.1.2 
 - create quizes
