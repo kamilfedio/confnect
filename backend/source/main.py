@@ -3,6 +3,10 @@ from fastapi import FastAPI, Response, status
 from fastapi.middleware.cors import CORSMiddleware
 
 from source.config.config import Config, ConfigMiddleware
+from source.routes.forms import router as forms_router
+from source.config.routes import RoutesConfig
+
+routes_config = RoutesConfig()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -31,3 +35,5 @@ app.add_middleware(
 @app.get("/")
 async def read_root() -> Response:
     return Response(status_code=status.HTTP_200_OK, content=f'{Config.title} - {Config.version} is running')
+
+app.include_router(forms_router, prefix=routes_config.forms, tags=[routes_config.forms])

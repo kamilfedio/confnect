@@ -1,0 +1,3 @@
+class RoutesConfig:
+    forms = 'forms'
+    
