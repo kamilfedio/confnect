@@ -1,9 +1,15 @@
 <template>
   <nav class="nav">
     <ul class="nav__list">
-      <li class="nav__item">features</li>
-      <li class="nav__item">about</li>
-      <li class="nav__item">contact</li>
+      <li class="nav__item">
+        <button class="nav__btn">features</button>
+      </li>
+      <li class="nav__item">
+        <button class="nav__btn">about</button>
+      </li>
+      <li class="nav__item">
+        <button class="nav__btn">contact</button>
+      </li>
     </ul>
   </nav>
 </template>
@@ -17,6 +23,11 @@
   }
   &__item {
     padding: 0 10px;
+  }
+  &__btn {
+    border: none;
+    font-size: 1.6em;
+    font-family: 'Questrial';
   }
 }
 </style>
