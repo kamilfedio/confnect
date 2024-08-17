@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import LandingPage from './page/LandingPage.vue'
+import FooterComponent from './components/FooterComponent.vue'
 </script>
 
 <template>
   <div class="wrapper">
     <LandingPage />
   </div>
+  <FooterComponent />
 </template>
 
 <style lang="scss">
@@ -23,7 +25,6 @@ html {
 
 .wrapper {
   width: 100%;
-  height: 100vh;
   max-width: 1200px;
   margin: 0 auto;
 }
