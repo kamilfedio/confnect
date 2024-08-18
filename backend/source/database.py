@@ -5,7 +5,7 @@ from source.config.database import DatabaseConfig
 
 db_config = DatabaseConfig()
 
-engine = create_async_engine('postgresql+asyncpg://postgres:root@localhost:5433/convnect', echo=True)
+engine = create_async_engine(db_config.database_url, echo=True)
 
 async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
 
