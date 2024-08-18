@@ -34,3 +34,11 @@ quizes, polls or other our features!
 
 ### 0.1.2 
 - create quizes
+
+## How to run
+### To run backend
+`cd backend`
+`docker-compose build`
+`docker-compose up`
+link: `http://0.0.0.0:8000/`
+docs: `http://0.0.0.0:8000/docs`
