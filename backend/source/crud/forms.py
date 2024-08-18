@@ -20,6 +20,6 @@ class FormsCrud:
         new_model = Form(**model.model_dump())
         session.add(new_model)
         await session.commit()
-        await session.refresh
+        await session.refresh(new_model)
 
         return new_model

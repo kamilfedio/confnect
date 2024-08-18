@@ -1,3 +1,3 @@
 class RoutesConfig:
-    forms = 'forms'
+    forms = '/forms'
     
