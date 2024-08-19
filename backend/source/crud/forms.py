@@ -36,3 +36,7 @@ class FormsCrud(BaseCRUD):
         await session.commit()
 
         return
+    
+
+
+crud = FormsCrud()

@@ -15,3 +15,6 @@ class DatabaseConfig:
     @property
     def database_url(self) -> str:
         return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+
+
+db_config = DatabaseConfig()
