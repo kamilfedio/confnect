@@ -66,3 +66,4 @@ class BaseCRUD(ABC):
             session (AsyncSession): session db
         """
         pass
+    

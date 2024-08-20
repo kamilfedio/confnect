@@ -1,12 +1,9 @@
 from contextlib import asynccontextmanager
-import os
 from fastapi import FastAPI, Response, status
 from fastapi.middleware.cors import CORSMiddleware
-from starlette.middleware.sessions import SessionMiddleware
 
 from source.config.config import Config, ConfigMiddleware
 from source.config.routes import routes_config
-from source.config.authorization import google_auth_config
 
 from source.routes.forms import router as forms_router
 from source.routes.authorization import router as auth_router
@@ -35,8 +32,6 @@ app.add_middleware(
     allow_methods=ConfigMiddleware.allow_methods,
     allow_headers=ConfigMiddleware.allow_headers,
 )
-
-app.add_middleware(SessionMiddleware, secret_key=google_auth_config.secret_key)
 
 routes = [
     (forms_router, routes_config.forms),
