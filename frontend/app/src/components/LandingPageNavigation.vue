@@ -2,19 +2,38 @@
   <nav class="nav">
     <ul class="nav__list">
       <li class="nav__item">
-        <button class="nav__btn">features</button>
+        <button class="nav__btn" @click="props.onScrollToFeatures()">features</button>
       </li>
       <li class="nav__item">
-        <button class="nav__btn">about</button>
+        <button class="nav__btn" @click="props.onScrollToAbout">about</button>
       </li>
       <li class="nav__item">
-        <button class="nav__btn">contact</button>
+        <button class="nav__btn" @click="props.onScrollToContact">contact</button>
       </li>
     </ul>
   </nav>
 </template>
 
-<style lang="scss">
+<script setup>
+import { defineProps } from 'vue'
+
+const props = defineProps({
+  onScrollToFeatures: {
+    type: Function,
+    required: false
+  },
+  onScrollToAbout: {
+    type: Function,
+    required: false
+  },
+  onScrollToContact: {
+    type: Function,
+    required: false
+  }
+})
+</script>
+
+<style scoped lang="scss">
 .nav {
   padding-left: 10px;
   &__list {
@@ -28,6 +47,7 @@
     border: none;
     font-size: 1.6em;
     font-family: 'Questrial';
+    cursor: pointer;
   }
 }
 </style>
