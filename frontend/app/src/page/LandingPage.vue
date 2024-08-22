@@ -226,18 +226,16 @@ main {
     &__icon {
       position: absolute;
       top: 0;
-      left: 0;
+      left: 50%;
+      transform: translateY(-50%);
       animation: arrowAnimation 1.5s linear infinite;
       &:nth-child(2) {
         top: 10px;
         animation-delay: 0.3s;
-        // animation: none;
       }
       &:nth-child(3) {
         top: 20px;
-        // animation-name: lastArrowAnimation;
         animation-delay: 0.6s;
-        // animation: none;
       }
     }
     &__logo {
