@@ -2,35 +2,23 @@
   <nav class="nav">
     <ul class="nav__list">
       <li class="nav__item">
-        <button class="nav__btn" @click="props.onScrollToFeatures()">features</button>
+        <button class="nav__btn" @click="onScrollToFeatures">features</button>
       </li>
       <li class="nav__item">
-        <button class="nav__btn" @click="props.onScrollToAbout">about</button>
+        <button class="nav__btn" @click="onScrollToAbout">about</button>
       </li>
       <li class="nav__item">
-        <button class="nav__btn" @click="props.onScrollToContact">contact</button>
+        <button class="nav__btn" @click="onScrollToContact">contact</button>
       </li>
     </ul>
   </nav>
 </template>
 
-<script setup>
-import { defineProps } from 'vue'
-
-const props = defineProps({
-  onScrollToFeatures: {
-    type: Function,
-    required: false
-  },
-  onScrollToAbout: {
-    type: Function,
-    required: false
-  },
-  onScrollToContact: {
-    type: Function,
-    required: false
-  }
-})
+<script>
+export default {
+  name: 'LandingPageNavigation',
+  props: ['onScrollToFeatures', 'onScrollToAbout', 'onScrollToContact']
+}
 </script>
 
 <style scoped lang="scss">

@@ -16,6 +16,12 @@
   </footer>
 </template>
 
+<script>
+export default {
+  name: 'FooterComponent'
+}
+</script>
+
 <style lang="scss">
 .footer {
   display: flex;

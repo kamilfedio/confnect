@@ -3,7 +3,7 @@
     <div class="header">
       <div class="header__brand">Confnect</div>
       <div class="header__nav">
-        <LandingPageNavigationVue
+        <LandingPageNavigation
           :onScrollToFeatures="scrollToFeatures"
           :onScrollToAbout="scrollToAbout"
           :onScrollToContact="scrollToContact"
@@ -128,39 +128,91 @@
         reply as fast as possible
       </div>
       <div class="contactForm">
-        <textarea class="contactForm__textArea" placeholder="Your issue..."></textarea>
+        <textarea
+          v-model="userMessage"
+          class="contactForm__textArea"
+          placeholder="Your issue..."
+        ></textarea>
         <div class="contactForm__details">
           <h1 class="contactForm__title">Contact Form</h1>
-          <input type="text" class="contactForm__input" placeholder="Your email..." />
-          <input type="text" class="contactForm__input" placeholder="Your name..." />
-          <button class="contactForm__btn">Send</button>
+          <input
+            v-model="userEmail"
+            type="text"
+            class="contactForm__input"
+            placeholder="Your email..."
+          />
+          <input
+            v-model="userName"
+            type="text"
+            class="contactForm__input"
+            placeholder="Your name..."
+          />
+          <button @click="sendMessage" class="contactForm__btn">Send</button>
         </div>
       </div>
     </section>
   </main>
 </template>
 
-<script setup lang="ts">
-import LandingPageNavigationVue from '../components/LandingPageNavigation.vue'
-
-function scrollToFeatures() {
-  const section = document.querySelector('.feature')
-  if (section) {
-    section.scrollIntoView({ behavior: 'smooth' })
-  }
-}
-
-function scrollToAbout() {
-  const section = document.querySelector('.journay')
-  if (section) {
-    section.scrollIntoView({ behavior: 'smooth' })
-  }
-}
-
-function scrollToContact() {
-  const section = document.querySelector('.writeToUs')
-  if (section) {
-    section.scrollIntoView({ behavior: 'smooth' })
+<script lang="ts">
+import LandingPageNavigation from '../components/LandingPageNavigation.vue'
+export default {
+  name: 'LandingPage',
+  components: {
+    LandingPageNavigation
+  },
+  data() {
+    return {
+      userMessage: '',
+      userName: '',
+      userEmail: ''
+    }
+  },
+  methods: {
+    scrollToFeatures() {
+      const section = document.querySelector('.feature')
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth' })
+      }
+    },
+    scrollToAbout() {
+      const section = document.querySelector('.journay')
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth' })
+      }
+    },
+    scrollToContact() {
+      const section = document.querySelector('.writeToUs')
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth' })
+      }
+    },
+    async sendMessage() {
+      // console.log({
+      //   userMessage: this.userMessage,
+      //   userName: this.userEmail,
+      //   userEmail: this.userName
+      // })
+      const url = 'http://0.0.0.0:8000/forms/'
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: this.userEmail,
+          name: this.userName,
+          content: this.userMessage
+        })
+      })
+        .then((response) => response.json())
+        .then((data) => console.log(data))
+        .catch((error) => console.error('Error:', error))
+      this.userMessage = ''
+      this.userName = ''
+      this.userEmail = ''
+    }
   }
 }
 </script>
