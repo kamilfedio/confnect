@@ -3,7 +3,11 @@
     <div class="header">
       <div class="header__brand">Confnect</div>
       <div class="header__nav">
-        <LandingPageNavigationVue />
+        <LandingPageNavigationVue
+          :onScrollToFeatures="scrollToFeatures"
+          :onScrollToAbout="scrollToAbout"
+          :onScrollToContact="scrollToContact"
+        />
       </div>
       <div class="header__login">
         <button class="header__btn">login</button>
@@ -16,7 +20,17 @@
         Are you bored with your usual presentations? Or maybe you want to clear up the mess of a
         rain of questions? We have something for you!
       </p>
-      <div class="introduction__icon"></div>
+      <div class="introduction__icons">
+        <div class="introduction__icon">
+          <img src="../img/icons/arrow.png" alt="arrow" class="introduction__iconImg" />
+        </div>
+        <div class="introduction__icon">
+          <img src="../img/icons/arrow.png" alt="arrow" class="introduction__iconImg" />
+        </div>
+        <div class="introduction__icon">
+          <img src="../img/icons/arrow.png" alt="arrow" class="introduction__iconImg" />
+        </div>
+      </div>
       <div class="introduction__logo">
         <img src="../img/transparentBgc_logo.png" alt="brand logo" class="introduction__img" />
       </div>
@@ -26,18 +40,24 @@
     <section class="checkUs">
       <div class="checkUs__title">
         <img src="../img/line.png" alt="line" class="checkUs__img" />
-        <p>Check us below!</p>
+        <p @click="scrollToFeatures">Check us below!</p>
         <img src="../img/line.png" alt="line" class="checkUs__img" />
       </div>
       <div class="checkUs__screens screens">
         <div class="screens__item">
-          <img src="../img/screen1.png" alt="screen1" class="screens__img" />
+          <div class="screens__imgContainer">
+            <div class="screens__img screen1"></div>
+          </div>
         </div>
         <div class="screens__item">
-          <img src="../img/screen2.png" alt="screen2" class="screens__img" />
+          <div class="screens__imgContainer">
+            <div class="screens__img screen2"></div>
+          </div>
         </div>
         <div class="screens__item">
-          <img src="../img/screen3.png" alt="screen3" class="screens__img" />
+          <div class="screens__imgContainer">
+            <div class="screens__img screen3"></div>
+          </div>
         </div>
       </div>
       <p class="checkUs__text">Screens from confnect</p>
@@ -52,16 +72,28 @@
         <div class="feature__block">check out</div>
       </div>
       <div class="feature__images">
-        <div class="feature__img">
-          <img src="../img/features1.png" alt="features1" />
+        <div class="feature__container">
+          <div class="feature__imgContainer">
+            <div class="feature__img">
+              <div class="feature__imgContent feature1"></div>
+            </div>
+          </div>
           <p>Live questions</p>
         </div>
-        <div class="feature__img">
-          <img src="../img/features2.png" alt="features2" />
+        <div class="feature__container">
+          <div class="feature__imgContainer">
+            <div class="feature__img">
+              <div class="feature__imgContent feature2"></div>
+            </div>
+          </div>
           <p>Feedback</p>
         </div>
-        <div class="feature__img">
-          <img src="../img/features3.png" alt="features3" />
+        <div class="feature__container">
+          <div class="feature__imgContainer">
+            <div class="feature__img">
+              <div class="feature__imgContent feature3"></div>
+            </div>
+          </div>
           <p>Notification</p>
         </div>
       </div>
@@ -110,9 +142,30 @@
 
 <script setup lang="ts">
 import LandingPageNavigationVue from '../components/LandingPageNavigation.vue'
+
+function scrollToFeatures() {
+  const section = document.querySelector('.feature')
+  if (section) {
+    section.scrollIntoView({ behavior: 'smooth' })
+  }
+}
+
+function scrollToAbout() {
+  const section = document.querySelector('.journay')
+  if (section) {
+    section.scrollIntoView({ behavior: 'smooth' })
+  }
+}
+
+function scrollToContact() {
+  const section = document.querySelector('.writeToUs')
+  if (section) {
+    section.scrollIntoView({ behavior: 'smooth' })
+  }
+}
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 header {
   height: 10vh;
 }
@@ -143,6 +196,12 @@ header {
     color: $mainDarkBlue;
     border: 1px solid $mainBlack;
     border-radius: 20px;
+    transition: 0.3s;
+    cursor: pointer;
+    &:hover {
+      color: $mainWhite;
+      background-color: $mainDarkBlue;
+    }
   }
 }
 
@@ -159,9 +218,31 @@ main {
       margin-top: 120px;
       letter-spacing: 1px;
     }
+    &__icons {
+      margin: 60px auto 0 auto;
+      position: relative;
+      width: 100%;
+    }
+    &__icon {
+      position: absolute;
+      top: 0;
+      left: 0;
+      animation: arrowAnimation 1.5s linear infinite;
+      &:nth-child(2) {
+        top: 10px;
+        animation-delay: 0.3s;
+        // animation: none;
+      }
+      &:nth-child(3) {
+        top: 20px;
+        // animation-name: lastArrowAnimation;
+        animation-delay: 0.6s;
+        // animation: none;
+      }
+    }
     &__logo {
       margin: 0 auto;
-      margin-top: 140px;
+      margin-top: 80px;
     }
     &__text {
       text-align: center;
@@ -177,6 +258,12 @@ main {
       border-radius: 20px;
       margin: 0 auto;
       margin-top: 80px;
+      transition: 0.3s;
+      cursor: pointer;
+      &:hover {
+        color: $mainWhite;
+        background-color: $mainDarkBlue;
+      }
     }
   }
   .checkUs {
@@ -190,22 +277,66 @@ main {
       align-items: center;
       p {
         margin: 0 8px;
+        cursor: pointer;
       }
     }
     &__screens {
       margin-top: 40px;
-      &.screens {
-        padding: 40px;
-        padding-bottom: 0;
-        display: flex;
-        justify-content: space-between;
-      }
     }
     &__text {
+      margin-top: 30px;
       font-size: 1.2em;
       padding: 10px;
       text-align: center;
       color: $mainDarkBlue;
+    }
+
+    .screens {
+      padding: 40px;
+      padding-bottom: 0;
+      display: flex;
+      justify-content: space-between;
+      &__item {
+        width: 200px;
+        height: 266px;
+        border-radius: 40px;
+        transform: rotate(-40deg);
+        background-color: $lightGrey;
+      }
+      &__imgContainer {
+        width: 100%;
+        height: 250px;
+        border-radius: 40px;
+        transform: translate(-12px, 12px);
+        overflow: hidden;
+      }
+      &__img {
+        background-size: contain;
+        background-repeat: no-repeat;
+        width: 271px;
+        height: 344px;
+        transform: rotate(40deg);
+        position: absolute;
+        transition: 0.5s;
+        &.screen1 {
+          background-image: url('../img/screen1.png');
+          top: -17%;
+          left: -29%;
+        }
+        &.screen2 {
+          background-image: url('../img/screen2.png');
+          top: -10%;
+          left: -21%;
+        }
+        &.screen3 {
+          background-image: url('../img/screen3.png');
+          top: -13%;
+          left: -31%;
+        }
+        &:hover {
+          transform: rotate(40deg) scale(1.2);
+        }
+      }
     }
   }
   .feature,
@@ -247,11 +378,8 @@ main {
       color: $mainDarkBlue;
       text-align: center;
     }
-    &__img p {
-      padding: 10px 0;
-    }
   }
-  .features {
+  .feature {
     &__images {
       display: flex;
       justify-content: space-between;
@@ -261,8 +389,46 @@ main {
       color: $mainDarkBlue;
       text-align: center;
     }
-    &__img p {
+    &__container p {
       padding: 10px 0;
+    }
+    &__imgContainer {
+      width: 205px;
+      height: 205px;
+      background-color: $mainGreen;
+      border-radius: 40px;
+      position: relative;
+    }
+    &__img {
+      width: 200px;
+      height: 200px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      border-radius: 40px;
+      position: absolute;
+      top: 5px;
+      bottom: 0;
+      overflow: hidden;
+    }
+    &__imgContent {
+      background-size: contain;
+      background-repeat: no-repeat;
+      width: 100%;
+      height: 100%;
+      transition: 0.5s;
+      &.feature1 {
+        background-image: url('../img/features1.png');
+      }
+      &.feature2 {
+        background-image: url('../img/features2.png');
+      }
+      &.feature3 {
+        background-image: url('../img/features3.png');
+      }
+      &:hover {
+        transform: scale(1.4);
+        background-position: 25px 25px;
+      }
     }
   }
   .journay,
@@ -322,8 +488,32 @@ main {
         border-radius: 20px;
         height: 30px;
         margin-top: 20px;
+        transition: 0.3s;
+        cursor: pointer;
+        &:hover {
+          color: $mainWhite;
+          background-color: $mainDarkBlue;
+        }
       }
     }
+  }
+}
+
+@keyframes arrowAnimation {
+  0% {
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  40% {
+    opacity: 1;
+  }
+  60% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
   }
 }
 </style>
