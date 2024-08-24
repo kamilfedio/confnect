@@ -188,11 +188,6 @@ export default {
       }
     },
     async sendMessage() {
-      // console.log({
-      //   userMessage: this.userMessage,
-      //   userName: this.userEmail,
-      //   userEmail: this.userName
-      // })
       const url = 'http://0.0.0.0:8000/forms/'
       fetch(url, {
         method: 'POST',
@@ -255,6 +250,11 @@ header {
       background-color: $mainDarkBlue;
     }
   }
+  @media (max-width: 430px) {
+    &__brand {
+      padding-right: 5px;
+    }
+  }
 }
 
 main {
@@ -291,8 +291,12 @@ main {
       }
     }
     &__logo {
+      width: 100%;
       margin: 0 auto;
       margin-top: 80px;
+      img {
+        width: 100%;
+      }
     }
     &__text {
       text-align: center;
@@ -313,6 +317,20 @@ main {
       &:hover {
         color: $mainWhite;
         background-color: $mainDarkBlue;
+      }
+    }
+    @media (max-width: 430px) {
+      width: 80%;
+      &__slogan {
+        margin-top: 40px;
+      }
+      &__logo {
+        transform: scale(0.7);
+        width: 100%;
+        margin-top: 40px;
+      }
+      &__btn {
+        margin-top: 40px;
       }
     }
   }
@@ -388,6 +406,37 @@ main {
         }
       }
     }
+    @media (max-width: 1230px) {
+      .screens {
+        width: 90%;
+        margin: 0 auto;
+        transform: scale(0.9);
+      }
+    }
+
+    @media (max-width: 960px) {
+      .screens {
+        flex-wrap: wrap;
+        overflow: hidden;
+        justify-content: space-around;
+        &__item {
+          margin: 0 6%;
+        }
+      }
+    }
+    @media (max-width: 430px) {
+      margin-top: 80px;
+      &__text {
+        margin-top: 0;
+      }
+      .screens {
+        padding-top: 0;
+        &__item {
+          margin-top: 10px;
+          transform: rotate(-45deg) scale(0.8);
+        }
+      }
+    }
   }
   .feature,
   .journay,
@@ -398,6 +447,7 @@ main {
     margin-top: 140px;
     &__title {
       font-size: 4em;
+      text-align: center;
       color: $mainDarkBlue;
       font-weight: normal;
       padding-bottom: 30px;
@@ -427,6 +477,9 @@ main {
       font-size: 1.6em;
       color: $mainDarkBlue;
       text-align: center;
+    }
+    @media (max-width: 430px) {
+      margin-top: 80px;
     }
   }
   .feature {
@@ -478,6 +531,27 @@ main {
       &:hover {
         transform: scale(1.4);
         background-position: 25px 25px;
+      }
+    }
+    @media (max-width: 960px) {
+      &__images {
+        flex-wrap: wrap;
+        justify-content: space-around;
+      }
+      &__container {
+        width: 50%;
+      }
+      &__imgContainer {
+        margin: 0 auto;
+      }
+    }
+    @media (max-width: 430px) {
+      margin-top: 80px;
+      &__images {
+        width: 90%;
+      }
+      &__container {
+        width: 100%;
       }
     }
   }
@@ -543,6 +617,17 @@ main {
         &:hover {
           color: $mainWhite;
           background-color: $mainDarkBlue;
+        }
+      }
+    }
+    @media (max-width: 430px) {
+      .contactForm {
+        width: 90%;
+        &__textArea {
+          width: 50%;
+        }
+        &__details {
+          width: 50%;
         }
       }
     }

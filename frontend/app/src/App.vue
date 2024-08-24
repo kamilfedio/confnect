@@ -15,6 +15,12 @@ html {
   font-family: 'Questrial';
   font-size: 10px;
   background-color: $mainBgc;
+  @media (max-width: 960px) {
+    font-size: 8px;
+  }
+  @media (max-width: 430px) {
+    font-size: 7px;
+  }
 }
 
 * {
@@ -24,8 +30,9 @@ html {
 }
 
 .wrapper {
-  width: 100%;
+  width: 100vw;
   max-width: 1200px;
   margin: 0 auto;
+  overflow: hidden;
 }
 </style>

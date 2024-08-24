@@ -54,5 +54,28 @@ export default {
       justify-content: space-between;
     }
   }
+  @media (max-width: 1024px) {
+    height: 20vh;
+    &__logo {
+      transform: scale(0.8);
+    }
+  }
+  @media (max-width: 900px) {
+    &__slogan {
+      display: none;
+      .socialMedia {
+        width: 30%;
+      }
+    }
+  }
+  @media (max-width: 430px) {
+    &__logo {
+      display: none;
+    }
+    .socialMedia {
+      width: 90%;
+      margin: 0 auto;
+    }
+  }
 }
 </style>
