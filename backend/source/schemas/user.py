@@ -6,10 +6,9 @@ class User(Base):
     name: str
 
 class UserCreate(User):
-    picture_url: str
+    password: str
 
 class UserRead(User):
     id: int
-    picture_url: str
     created_at: datetime
-    updated_at: datetime
+    updated_at: datetime | None
