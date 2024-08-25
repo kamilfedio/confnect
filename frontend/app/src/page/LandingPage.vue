@@ -1,4 +1,7 @@
 <template>
+  <div v-if="showScrollArrow" class="arrow" @click="scrollToTop">
+    <img src="../img/icons/arrowUp.png" alt="arrow icon" class="arrow__icon" />
+  </div>
   <header>
     <div class="header">
       <div class="header__brand">Confnect</div>
@@ -165,7 +168,8 @@ export default {
     return {
       userMessage: '',
       userName: '',
-      userEmail: ''
+      userEmail: '',
+      showScrollArrow: false
     }
   },
   methods: {
@@ -186,6 +190,12 @@ export default {
       if (section) {
         section.scrollIntoView({ behavior: 'smooth' })
       }
+    },
+    scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    },
+    handleScroll() {
+      this.showScrollArrow = window.scrollY > window.innerHeight
     },
     async sendMessage() {
       const url = 'http://0.0.0.0:8000/forms/'
@@ -208,11 +218,35 @@ export default {
       this.userName = ''
       this.userEmail = ''
     }
+  },
+  mounted() {
+    window.addEventListener('scroll', this.handleScroll)
+    this.handleScroll()
+  },
+  beforeUnmount() {
+    window.removeEventListener('scroll', this.handleScroll)
   }
 }
 </script>
 
 <style scoped lang="scss">
+.arrow {
+  width: 50px;
+  height: 50px;
+  border-radius: 17px;
+  background-color: $mainGreen;
+  position: fixed;
+  right: 50px;
+  bottom: 50px;
+  cursor: pointer;
+  &__icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
 header {
   height: 10vh;
 }
