@@ -4,7 +4,7 @@ from datetime import datetime
 from source.models.base import Base
 from source.utils.enums import TokenType
 
-class Tokens(Base):
+class Token(Base):
     __tablename__ = 'tokens'
 
     token: Mapped[str] = mapped_column(Text, primary_key=True, unique=True, nullable=False)
