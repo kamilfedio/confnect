@@ -50,18 +50,15 @@ class Authenticate:
         return token_data
     
     @staticmethod
-    async def get_token(token: str, session: AsyncSession) -> Tokens | None:
-        return await tokens_crud.get_by_id(token, session)
+    async def get_token(token: str, session: AsyncSession, token_type: TokenType = TokenType.ACCESS) -> Tokens | None:
+        return await tokens_crud.get_by_id(id=token, session=session, token_type=token_type)
 
     @classmethod
     async def verify_refresh_token(cls, token: str, session: AsyncSession) -> bool:
-        new_token: Tokens | None = await cls.get_token(token, session)
+        new_token: Tokens | None = await cls.get_token(token, session, token_type=TokenType.REFRESH)
         if new_token is None:
             raise HTTPException(status_code=401, detail="Invalid refresh token")
-        if new_token.type != TokenType.REFRESH:
-            raise HTTPException(status_code=401, detail="Invalid token type")
-        if new_token.expiration_date < datetime.now():
-            raise HTTPException(status_code=401, detail="Token expired")
+        
         return True
     
 

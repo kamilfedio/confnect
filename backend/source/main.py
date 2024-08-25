@@ -7,6 +7,7 @@ from source.config.routes import routes_config
 
 from source.routes.forms import router as forms_router
 from source.routes.authorization import router as auth_router
+from source.routes.test import router as test_router
 
 
 @asynccontextmanager
@@ -36,6 +37,7 @@ app.add_middleware(
 routes = [
     (forms_router, routes_config.forms),
     (auth_router, routes_config.auth),
+    (test_router, routes_config.test),
 ]
 
 for route in routes:

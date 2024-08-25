@@ -14,8 +14,8 @@ from source.utils.enums import TokenType
 
 router = APIRouter()
 
-@router.post('/register')
-async def register(user_create: UserCreate, session: AsyncSession = Depends(get_async_session)) -> dict:
+@router.post('/register', status_code=status.HTTP_201_CREATED, response_model=UserRead)
+async def register(user_create: UserCreate, session: AsyncSession = Depends(get_async_session)) -> User:
     hashed_pass = auth.get_password_hash(user_create.password)
 
     user = User(**user_create.model_dump(exclude={'password'}), hashed_password=hashed_pass)
@@ -24,15 +24,11 @@ async def register(user_create: UserCreate, session: AsyncSession = Depends(get_
     except exc.IntegrityError:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='User already exists')
     
-    access_token: str = await auth.create_token(user.id, type=TokenType.ACCESS, session=session)
-    refresh_token: str = await auth.create_token(user.id, type=TokenType.REFRESH, session=session)
-
     user = UserRead.model_validate(user)
-    data_to_return: dict = {'user': user, 'tokens': {'access_token': access_token, 'refresh_token': refresh_token, 'token_type': 'bearer'}}
-    return data_to_return
+    return user
 
-@router.post('/login')
-async def create_access_token(
+@router.post('/token')
+async def create_token(
     form_data: OAuth2PasswordRequestForm = Depends(OAuth2PasswordRequestForm),
     session: AsyncSession = Depends(get_async_session)
 ) -> dict[str, str]:
@@ -49,11 +45,11 @@ async def create_access_token(
 @router.post('/refresh')
 async def refresh_token(refresh_token: str, session: AsyncSession = Depends(get_async_session)) -> dict[str, str]:
     if not await auth.verify_refresh_token(refresh_token, session):
-        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Invalid refresh token')
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Invalid refresh token')
     
-    token: Tokens | None = await auth.get_token(refresh_token, session)
+    token: Tokens | None = await auth.get_token(refresh_token, session, token_type=TokenType.REFRESH)
     if not token:
-        return HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Invalid refresh token')
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Invalid refresh token')
     
     access_token: str = await auth.create_token(token.user_id, type=TokenType.ACCESS, session=session)
 
