@@ -8,7 +8,8 @@ from source.config.routes import routes_config
 from source.routes.forms import router as forms_router
 from source.routes.authorization import router as auth_router
 from source.routes.test import router as test_router
-
+from source.routes.users import router as users_router
+from source.routes.events import router as events_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -38,6 +39,8 @@ routes = [
     (forms_router, routes_config.forms),
     (auth_router, routes_config.auth),
     (test_router, routes_config.test),
+    (users_router, routes_config.users),
+    (events_router, routes_config.events),
 ]
 
 for route in routes:
