@@ -12,8 +12,8 @@ class Event(Base):
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[str] = mapped_column(Text, nullable=False)
     place: Mapped[str] = mapped_column(String(255), nullable=False)
-    optional_info: Mapped[str] = mapped_column(String(255), nullable=True)
+    optional_info: Mapped[str | None] = mapped_column(String(255), nullable=True)
     date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=func.now)
-    updated_at: Mapped[datetime | None] = mapped_column(DateTime, onupdate=func.now)
+    created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=func.now())
+    updated_at: Mapped[datetime | None] = mapped_column(DateTime, onupdate=func.now())
     
