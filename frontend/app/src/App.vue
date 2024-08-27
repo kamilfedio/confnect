@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import LandingPage from './page/LandingPage.vue'
-import FooterComponent from './components/FooterComponent.vue'
+import LandingPage from './page/LandingPage/LandingPage.vue'
+import FooterComponent from './components/FooterComponent/FooterComponent.vue'
 </script>
 
 <template>

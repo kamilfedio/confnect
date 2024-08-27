@@ -14,28 +14,5 @@
   </nav>
 </template>
 
-<script>
-export default {
-  name: 'LandingPageNavigation',
-  props: ['onScrollToFeatures', 'onScrollToAbout', 'onScrollToContact']
-}
-</script>
-
-<style scoped lang="scss">
-.nav {
-  padding-left: 10px;
-  &__list {
-    list-style: none;
-    display: flex;
-  }
-  &__item {
-    padding: 0 10px;
-  }
-  &__btn {
-    border: none;
-    font-size: 1.6em;
-    font-family: 'Questrial';
-    cursor: pointer;
-  }
-}
-</style>
+<script src="./LandingPageNavigation.vue.ts"></script>
+<style src="./LandingPageNavigation.scss" scoped></style>
