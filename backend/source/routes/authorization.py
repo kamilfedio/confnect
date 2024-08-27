@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import exc
 
-from source.models.token import Tokens
+from source.models.token import Token
 from source.database import get_async_session
 from source.schemas.user import UserRead, UserCreate
 from source.utils.authenticate import auth
@@ -47,7 +47,7 @@ async def refresh_token(refresh_token: str, session: AsyncSession = Depends(get_
     if not await auth.verify_refresh_token(refresh_token, session):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Invalid refresh token')
     
-    token: Tokens | None = await auth.get_token(refresh_token, session, token_type=TokenType.REFRESH)
+    token: Token | None = await auth.get_token(refresh_token, session, token_type=TokenType.REFRESH)
     if not token:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Invalid refresh token')
     

@@ -9,7 +9,7 @@ from source.schemas.user import UserRead
 from source.config.secret import secret_config
 from source.crud.user import user_crud
 from source.crud.tokens import tokens_crud
-from source.models.token import Tokens
+from source.models.token import Token
 from source.utils.enums import TokenType
 
 class Authenticate:
@@ -44,18 +44,18 @@ class Authenticate:
                 raise ValueError('Invalid token type')
         expire = datetime.now() + timedelta(minutes=expirates)
         token_data = secrets.token_urlsafe(32)
-        token = Tokens(token=token_data, user_id=user_id, type=type, expiration_date=expire)
+        token = Token(token=token_data, user_id=user_id, type=type, expiration_date=expire)
         await tokens_crud.create(token, session)
         
         return token_data
     
     @staticmethod
-    async def get_token(token: str, session: AsyncSession, token_type: TokenType = TokenType.ACCESS) -> Tokens | None:
+    async def get_token(token: str, session: AsyncSession, token_type: TokenType = TokenType.ACCESS) -> Token | None:
         return await tokens_crud.get_by_id(id=token, session=session, token_type=token_type)
 
     @classmethod
     async def verify_refresh_token(cls, token: str, session: AsyncSession) -> bool:
-        new_token: Tokens | None = await cls.get_token(token, session, token_type=TokenType.REFRESH)
+        new_token: Token | None = await cls.get_token(token, session, token_type=TokenType.REFRESH)
         if new_token is None:
             raise HTTPException(status_code=401, detail="Invalid refresh token")
         

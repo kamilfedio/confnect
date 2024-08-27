@@ -2,8 +2,7 @@ from fastapi import Depends, Query, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from source.utils.enums import TokenType
-from source.models.token import Tokens
+from source.models.token import Token
 from source.models.user import User
 from source.database import get_async_session
 from source.utils.authenticate import auth
@@ -21,7 +20,7 @@ class Dependencies:
             session: AsyncSession = Depends(get_async_session),
     ) -> User:
         print(token)
-        access_token: Tokens | None = await auth.get_token(token, session)
+        access_token: Token | None = await auth.get_token(token, session)
         if access_token is None:
             raise HTTPException(status_code=401, detail="Invalid or expired token")
         
