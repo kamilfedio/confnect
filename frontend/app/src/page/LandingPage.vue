@@ -131,11 +131,14 @@
         reply as fast as possible
       </div>
       <div class="contactForm">
-        <textarea
-          v-model="userMessage"
-          class="contactForm__textArea"
-          placeholder="Your issue..."
-        ></textarea>
+        <div class="contactForm__areaContainer">
+          <textarea
+            v-model="userMessage"
+            class="contactForm__textArea"
+            placeholder="Your issue..."
+          ></textarea>
+          <p v-if="messageError" class="contactForm__error">{{ messageError }}</p>
+        </div>
         <div class="contactForm__details">
           <h1 class="contactForm__title">Contact Form</h1>
           <input
@@ -144,12 +147,14 @@
             class="contactForm__input"
             placeholder="Your email..."
           />
+          <p v-if="emailError" class="contactForm__error">{{ emailError }}</p>
           <input
             v-model="userName"
             type="text"
             class="contactForm__input"
             placeholder="Your name..."
           />
+          <p v-if="nameError" class="contactForm__error">{{ nameError }}</p>
           <button @click="sendMessage" class="contactForm__btn">Send</button>
         </div>
       </div>
@@ -169,7 +174,10 @@ export default {
       userMessage: '',
       userName: '',
       userEmail: '',
-      showScrollArrow: false
+      showScrollArrow: false,
+      messageError: '',
+      emailError: '',
+      nameError: ''
     }
   },
   methods: {
@@ -197,26 +205,54 @@ export default {
     handleScroll() {
       this.showScrollArrow = window.scrollY > window.innerHeight
     },
+    validateEmail() {
+      const atIndex = this.userEmail.indexOf('@')
+      const dotAfterAt = this.userEmail.indexOf('.', atIndex)
+
+      if (atIndex === -1 || dotAfterAt === -1) {
+        this.emailError = 'Incorrect email format'
+      } else return
+    },
+    validateMessage() {
+      if (this.userMessage.length < 10) {
+        this.messageError = 'The message must contain at least 10 characters'
+      } else return
+    },
+    validateName() {
+      if (this.userName.length < 3) {
+        this.nameError = 'The name must contain at least 3 characters'
+      } else return
+    },
     async sendMessage() {
+      this.messageError = ''
+      this.emailError = ''
+      this.nameError = ''
       const url = 'http://0.0.0.0:8000/forms/'
-      fetch(url, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          email: this.userEmail,
-          name: this.userName,
-          content: this.userMessage
+      this.validateEmail()
+      this.validateMessage()
+      this.validateName()
+      if (this.messageError || this.emailError || this.nameError) {
+        return
+      } else {
+        fetch(url, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: this.userEmail,
+            name: this.userName,
+            content: this.userMessage
+          })
         })
-      })
-        .then((response) => response.json())
-        .then((data) => console.log(data))
-        .catch((error) => console.error('Error:', error))
-      this.userMessage = ''
-      this.userName = ''
-      this.userEmail = ''
+          .then((response) => response.json())
+          .then((data) => console.log(data))
+          .catch((error) => console.error('Error:', error))
+        this.userMessage = ''
+        this.userName = ''
+        this.userEmail = ''
+      }
     }
   },
   mounted() {
@@ -652,6 +688,11 @@ main {
           color: $mainWhite;
           background-color: $mainDarkBlue;
         }
+      }
+      &__error {
+        color: $errorRed;
+        font-weight: bold;
+        font-size: 1.4em;
       }
     }
     @media (max-width: 430px) {
