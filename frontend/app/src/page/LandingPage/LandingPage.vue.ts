@@ -1,10 +1,13 @@
 import { defineComponent, ref, onMounted, onBeforeUnmount } from 'vue'
 import LandingPageNavigation from '../../components/LandingPageNavigation/LandingPageNavigation.vue'
+import FooterComponent from '@/components/FooterComponent/FooterComponent.vue'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'LandingPage',
   components: {
-    LandingPageNavigation
+    LandingPageNavigation,
+    FooterComponent
   },
   setup() {
     // Reaktywne zmienne
@@ -15,6 +18,17 @@ export default defineComponent({
     const messageError = ref<string>('')
     const emailError = ref<string>('')
     const nameError = ref<string>('')
+
+    //Router
+    const router = useRouter()
+
+    const goToLogin = () => {
+      router.push('/login')
+    }
+
+    const goToRegister = () => {
+      router.push('/register')
+    }
 
     // Funkcje do przewijania strony
     const scrollToFeatures = () => {
@@ -139,7 +153,9 @@ export default defineComponent({
       scrollToAbout,
       scrollToContact,
       scrollToTop,
-      sendMessage
+      sendMessage,
+      goToLogin,
+      goToRegister
     }
   }
 })
