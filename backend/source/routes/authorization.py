@@ -14,8 +14,8 @@ from source.utils.enums import TokenType
 
 router = APIRouter()
 
-@router.post('/register', status_code=status.HTTP_201_CREATED, response_model=UserRead)
-async def register(user_create: UserCreate, session: AsyncSession = Depends(get_async_session)) -> User:
+@router.post('/register', status_code=status.HTTP_201_CREATED)
+async def register(user_create: UserCreate, session: AsyncSession = Depends(get_async_session)) -> dict[str, str]:
     hashed_pass = auth.get_password_hash(user_create.password)
 
     user = User(**user_create.model_dump(exclude={'password'}), hashed_password=hashed_pass)
