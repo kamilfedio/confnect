@@ -17,5 +17,15 @@ class TokensCrud:
         query = select(Token).where(Token.token == id, Token.type == token_type, Token.expiration_date > datetime.now())
         res = await session.execute(query)
         return res.scalars().one_or_none()    
+    
+    async def get_user_tokens_by_id(self, user_id: int, token_type: TokenType, session: AsyncSession) -> list[Base]:
+        query = select(Token).where(Token.user_id == user_id, Token.type == token_type)
+        res = await session.execute(query)
+        return res.scalars().all()
+
+    async def disable_token(self, id: int, session: AsyncSession) -> None:
+        query = select(Token).where(Token.token == id)
+        token: Token = await session.execute(query)
+        token.expirated = True
 
 tokens_crud = TokensCrud()

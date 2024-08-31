@@ -13,7 +13,7 @@ from source.models.token import Token
 from source.utils.enums import TokenType
 
 class Authenticate:
-    pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+    pwd_context = CryptContext(schemes=[secret_config.ALGORITHM], deprecated="auto")
 
     @classmethod
     def verify_password(cls, plain_password: str, hashed_password: str) -> bool:
@@ -35,9 +35,15 @@ class Authenticate:
     
     @classmethod
     async def create_token(cls, user_id: int,  session: AsyncSession, type: str = TokenType.ACCESS) -> str:
+        async def _disable_old_access_token(user_id: int, session: AsyncSession) -> None:
+            available_access_tokens: list[Token] = await tokens_crud.get_user_tokens_by_id(user_id, TokenType.ACCESS, session)
+            for token in available_access_tokens:
+                await tokens_crud.disable_token(token.token, session)
+
         match type:
             case TokenType.ACCESS:
                 expirates = secret_config.ACCESS_TOKEN_EXPIRE_MINUTES
+                await _disable_old_access_token(user_id, session)
             case TokenType.REFRESH:
                 expirates = secret_config.REFRESH_TOKEN_EXPIRE_MINUTES
             case _:  
@@ -58,6 +64,8 @@ class Authenticate:
         new_token: Token | None = await cls.get_token(token, session, token_type=TokenType.REFRESH)
         if new_token is None:
             raise HTTPException(status_code=401, detail="Invalid refresh token")
+        if new_token.expirated:
+            raise HTTPException(status_code=401, detail="Refresh token expired")
         
         return True
     

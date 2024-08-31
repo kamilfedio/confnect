@@ -24,8 +24,10 @@ async def register(user_create: UserCreate, session: AsyncSession = Depends(get_
     except exc.IntegrityError:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='User already exists')
     
-    user = UserRead.model_validate(user)
-    return user
+    access_token: str = await auth.create_token(user.id, type=TokenType.ACCESS, session=session)
+    refresh_token: str = await auth.create_token(user.id, type=TokenType.REFRESH, session=session)
+
+    return {'access_token': access_token, 'refresh_token': refresh_token, 'token_type': 'bearer'}
 
 @router.post('/token')
 async def create_token(
@@ -50,7 +52,9 @@ async def refresh_token(refresh_token: str, session: AsyncSession = Depends(get_
     token: Token | None = await auth.get_token(refresh_token, session, token_type=TokenType.REFRESH)
     if not token:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Invalid refresh token')
-    
+    if token.expirated:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail='Token has been expirated')
+
     access_token: str = await auth.create_token(token.user_id, type=TokenType.ACCESS, session=session)
 
     return {'access_token': access_token, 'token_type': 'bearer'}
