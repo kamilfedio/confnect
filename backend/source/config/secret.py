@@ -10,6 +10,6 @@ class SecretConfig:
     ALGORITHM = 'bcrypt'
     ACCESS_TOKEN_EXPIRE_MINUTES = 30
     REFRESH_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7
-
+    INVITATION_TOKEN_EXPIRE_MINUTES = 60*24
     
 secret_config = SecretConfig()
