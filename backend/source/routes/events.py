@@ -9,9 +9,7 @@ from source.dependencies.depends import dependencies
 from source.crud.events import event_crud
 from source.models.event import Event
 
-
 router = APIRouter()
-
 
 @router.get("/", response_model=list[EventRead])
 async def get_all_user_events(
@@ -33,7 +31,6 @@ async def get_event_by_id(
         )
 
     return event
-
 
 @router.post("/", response_model=EventRead)
 async def create_event(
