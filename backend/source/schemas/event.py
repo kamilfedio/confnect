@@ -1,5 +1,6 @@
 from datetime import datetime
 from source.schemas.base import Base
+from source.schemas.feedback import FeedbackRead
 
 class Event(Base):
     name: str
@@ -23,3 +24,6 @@ class EventRead(Event):
     id: int
     created_at: datetime
     updated_at: datetime | None
+
+class EventReadFull(EventRead):
+    feedbacks: list[FeedbackRead]

@@ -1,8 +1,9 @@
-from sqlalchemy.orm import mapped_column, Mapped
+from sqlalchemy.orm import mapped_column, Mapped, relationship
 from sqlalchemy import Integer, String, ForeignKey, Text, DateTime, func
 from datetime import datetime
 
 from source.models.base import Base
+from source.models.feedback import Feedback
 
 class Event(Base):
     __tablename__ = 'events'
@@ -16,4 +17,6 @@ class Event(Base):
     date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=func.now())
     updated_at: Mapped[datetime | None] = mapped_column(DateTime, onupdate=func.now())
+
+    feedbacks: Mapped[list['Feedback']] = relationship('Feedback', back_populates='event', lazy='selectin')
     

@@ -4,6 +4,8 @@ from fastapi.responses import StreamingResponse
 from sqlalchemy import Sequence
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from source.models.feedback import Feedback
+from source.schemas.feedback import FeedbackRead, FeedbackCreate
 from source.database import get_async_session
 from source.models.user import User
 from source.models.invitation_code import InvitationCode
@@ -11,6 +13,7 @@ from source.schemas.event import EventRead, EventUpdate, EventCreate
 from source.dependencies.depends import dependencies
 from source.crud.events import event_crud
 from source.crud.invitation_codes import codes_crud
+from source.crud.feedback import feedback_crud
 from source.models.event import Event
 from source.utils.codes import code_util
 
@@ -107,11 +110,66 @@ async def get_qr_image(
     return StreamingResponse(qr_code, media_type="image/png")
 
 
-@router.get('/join/{code}', response_model=EventRead)
-async def join_event(code: str, session: AsyncSession = Depends(get_async_session)) -> Response:
+@router.get("/join/{code}", response_model=EventRead)
+async def join_event(
+    code: str, session: AsyncSession = Depends(get_async_session)
+) -> Response:
     invitation_code: InvitationCode | None = await codes_crud.get_by_code(code, session)
     if not invitation_code:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Code not found')
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Code not found"
+        )
 
     event: Event = invitation_code.event
     return event
+
+
+@router.get("/feedback", response_model=list[FeedbackRead])
+async def get_user_feedbacks(
+    user: User = Depends(dependencies.get_current_user),
+    pagination: tuple[int, int] = Depends(dependencies.pagination),
+    session: AsyncSession = Depends(get_async_session),
+) -> list[FeedbackRead]:
+    return await feedback_crud.get_all(user.id, pagination, session)
+
+
+@router.get("/{event_id}/feedback", response_model=list[FeedbackRead])
+async def get_event_feedbacks(
+    event_id: int,
+    pagination: tuple[int, int] = Depends(dependencies.pagination),
+    session: AsyncSession = Depends(get_async_session),
+) -> list[FeedbackRead]:
+    return await feedback_crud.get_all(event_id, pagination, session)
+
+
+@router.get("/feedback/{id}", response_model=FeedbackRead)
+async def get_feedback_by_id(
+    id: int, session: AsyncSession = Depends(get_async_session)
+) -> FeedbackRead:
+    feedback: Feedback | None = await feedback_crud.get_by_id(id, session)
+    if not feedback:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Feedback not found"
+        )
+
+    return feedback
+
+
+@router.post("/{event_id}/feedback", response_model=FeedbackRead)
+async def create_feedback(
+    event_id: int,
+    feedback: FeedbackCreate,
+    session: AsyncSession = Depends(get_async_session),
+) -> FeedbackRead:
+    feedback = FeedbackRead(**feedback.model_dump(), event_id=event_id)
+    return await feedback_crud.create(feedback, session)
+
+
+@router.delete("/feedback/{id}")
+async def delete_feedback_by_id(
+    id: int,
+    user: User = Depends(dependencies.get_current_user),
+    session: AsyncSession = Depends(get_async_session),
+) -> Response:
+    await feedback_crud.delete_by_id(id, session)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
