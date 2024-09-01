@@ -1,9 +1,61 @@
-.login {
+.loginPage {
   position: absolute;
-  width: 200px;
-  height: 200px;
-  background-color: yellow;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  border-radius: 40px;
+  width: 55%;
+  height: 59vh;
+  background-color: $mainGreen;
+  border-left: 3px solid $darkBlue;
+
+  &__logo {
+    position: absolute;
+    top: 10%;
+    left: 36%;
+    z-index: 10;
+    border-radius: 40px;
+
+    img {
+      padding: 35px;
+    }
+  }
+
+  &__image {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-image: url('../../img/loginImg1.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    width: 45%;
+    height: 100%;
+  }
+
+  &__part {
+    position: absolute;
+    top: 10%;
+    left: 0;
+    width: 90px;
+    height: 132px;
+    background-color: $mainGreen;
+    border-radius: 0 40px 40px 0;
+    border: 3px solid $darkBlue;
+    border-left: none;
+  }
+
+  &__btn {
+    position: absolute;
+    top: 50%;
+    left: 53%;
+    transform: translateX(-50%);
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    font-size: 1.6rem;
+    text-transform: uppercase;
+    color: $mainWhite;
+    line-height: 20px;
+    letter-spacing: 0.3em;
+    cursor: pointer;
+  }
 }
