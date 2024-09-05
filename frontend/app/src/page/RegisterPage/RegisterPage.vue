@@ -6,7 +6,7 @@
         <p class="registerForm__text">
           NIce to see you! We hope you will find everything you need here!
         </p>
-        <form action="sumbit" class="registerForm__form">
+        <form @submit="submitForm" class="registerForm__form">
           <input type="email" class="registerForm__input" placeholder="email" />
           <input type="text" class="registerForm__input" placeholder="name" />
           <input type="password" class="registerForm__input" placeholder="password" />
@@ -14,7 +14,7 @@
             <input type="checkbox" class="registerForm__input" id="rules" />
             <label for="rules" class="registerForm__label">Accept rules</label>
           </div>
-          <button class="registerForm__btn">Get started</button>
+          <button type="submit" @click="submitForm" class="registerForm__btn">Get started</button>
         </form>
       </div>
       <div class="registerPage__logo logo">

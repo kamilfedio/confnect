@@ -1,0 +1,127 @@
+.wrapper {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  overflow: hidden;
+  height: 100vh;
+  padding: 20px 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  height: 20vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  .topPanel {
+    display: flex;
+    justify-content: space-between;
+
+    &__logo {
+      width: 165px;
+      height: 41px;
+    }
+
+    &__profile {
+      display: flex;
+    }
+
+    .profile {
+      &__name {
+        color: $mainDarkBlue;
+        margin-right: 10px;
+      }
+
+      &__firstName {
+        font-size: 2.4rem;
+      }
+
+      &__surName {
+        font-size: 1.6rem;
+      }
+
+      &__img {
+        position: relative;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: red;
+
+        &::after {
+          content: '';
+          position: absolute;
+          right: 20px;
+          bottom: -5px;
+          width: 60px;
+          height: 3px;
+          background-color: $mainGreen;
+          transform: skewX(-10deg);
+          transform-origin: left;
+        }
+      }
+    }
+  }
+
+  .welcome {
+    position: relative;
+    font-size: 2.4rem;
+    color: $mainDarkBlue;
+    margin-left: 15px;
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: -15px;
+      bottom: -5px;
+      width: 15%;
+      height: 3px;
+      background-color: $mainGreen;
+      transform: skewX(-10deg);
+      transform-origin: left;
+    }
+  }
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  &__title {
+    font-size: 4em;
+    text-align: center;
+    color: $mainDarkBlue;
+    font-weight: normal;
+    margin-top: 100px;
+    padding-bottom: 30px;
+  }
+
+  &__blocks {
+    display: flex;
+    width: 30%;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin: 0 auto;
+  }
+
+  &__block {
+    flex-basis: 30%;
+    font-size: 1.2em;
+    font-weight: normal;
+    text-align: center;
+    color: $mainDarkBlue;
+    background-color: $lightGrey;
+    border-radius: 20px;
+    padding: 6px 12px;
+    margin: 6px 0;
+    letter-spacing: 1px;
+  }
+
+  &__text {
+    text-align: center;
+    font-size: 1.2rem;
+    margin: 20px auto 50px auto;
+    width: 20%;
+  }
+}

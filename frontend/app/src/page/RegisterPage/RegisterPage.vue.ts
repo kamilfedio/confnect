@@ -13,9 +13,19 @@ export default defineComponent({
     const goToLogin = () => {
       router.push('/login')
     }
+
+    const goToUserPage = () => {
+      router.push('/confnect/')
+    }
+
+    const submitForm = (e: SubmitEvent) => {
+      e.preventDefault()
+      goToUserPage()
+    }
     // Zwracamy zmienne i funkcje, które będą używane w szablonie
     return {
-      goToLogin
+      goToLogin,
+      submitForm
     }
   }
 })

@@ -7,7 +7,7 @@
   width: 55%;
   height: 59vh;
   background-color: $mainGreen;
-  border-left: 3px solid $darkBlue;
+  border-left: 3px solid $mainDarkBlue;
 
   &__logo {
     position: absolute;
@@ -40,7 +40,7 @@
     height: 132px;
     background-color: $mainGreen;
     border-radius: 0 40px 40px 0;
-    border: 3px solid $darkBlue;
+    border: 3px solid $mainDarkBlue;
     border-left: none;
   }
 
@@ -88,9 +88,9 @@
       border-radius: 40px;
       border: none;
       margin-top: 20px;
+      padding: 10px 0 10px 20px;
 
       &::placeholder {
-        padding-left: 20px;
         color: $mainBlack;
       }
     }
@@ -107,14 +107,14 @@
 
       .registerForm__label {
         font-size: 1.2rem;
-        color: $darkBlue;
+        color: $mainDarkBlue;
       }
     }
 
     &__btn {
-      border: 2px solid $darkBlue;
+      border: 2px solid $mainDarkBlue;
       border-radius: 40px;
-      color: $darkBlue;
+      color: $mainDarkBlue;
       background-color: transparent;
       line-height: 45px;
       font-size: 1.6rem;
@@ -122,7 +122,7 @@
 
       &:hover {
         color: $mainBgc;
-        background-color: $darkBlue;
+        background-color: $mainDarkBlue;
         cursor: pointer;
       }
     }
