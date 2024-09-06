@@ -28,6 +28,7 @@
       </div>
     </main>
     <!-- <EventComponent /> -->
+    <!-- <SearchPanel /> -->
   </div>
 </template>
 
