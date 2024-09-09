@@ -3,7 +3,6 @@
   max-width: 1200px;
   margin: 0 auto;
   overflow: hidden;
-  height: 100vh;
   padding: 20px 30px;
   display: flex;
   flex-direction: column;
@@ -87,13 +86,14 @@ header {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin-bottom: 50px;
 
   &__title {
     font-size: 4em;
     text-align: center;
     color: $mainDarkBlue;
     font-weight: normal;
-    margin-top: 100px;
+    margin-top: 60px;
     padding-bottom: 30px;
   }
 
@@ -123,5 +123,31 @@ header {
     font-size: 1.2rem;
     margin: 20px auto 50px auto;
     width: 20%;
+  }
+}
+
+.mainSection {
+  display: flex;
+  justify-content: space-around;
+  margin: 0 auto;
+  width: 80%;
+
+  .addEvent {
+    position: relative;
+    display: flex;
+    width: 532px;
+    height: 200px;
+    background-color: $lightGrey;
+    border-radius: 40px 0 0 40px;
+    margin-bottom: 50px;
+
+    &__txt {
+      position: absolute;
+      color: $mainWhite;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 3.2rem;
+    }
   }
 }

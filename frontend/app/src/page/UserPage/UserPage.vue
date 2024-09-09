@@ -26,9 +26,19 @@
           green box!
         </p>
       </div>
+      <div class="mainSection">
+        <div class="mainSection__events">
+          <div class="addEvent">
+            <p class="addEvent__txt">+ Add Event</p>
+          </div>
+          <EventComponent />
+          <EventComponent />
+        </div>
+        <div class="mainSection__other">
+          <SearchPanel />
+        </div>
+      </div>
     </main>
-    <!-- <EventComponent /> -->
-    <!-- <SearchPanel /> -->
   </div>
 </template>
 

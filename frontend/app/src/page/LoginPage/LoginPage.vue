@@ -4,10 +4,15 @@
     <div class="loginPage">
       <div class="loginPage__loginForm loginForm">
         <p class="loginForm__text">Again we us. We are so glad you love us!</p>
-        <form @submit="submitForm" class="loginForm__form">
-          <input type="email" class="loginForm__input" placeholder="email" />
-          <input type="password" class="loginForm__input" placeholder="password" />
-          <button type="submit" @click="submitForm" class="loginForm__btn">Get started</button>
+        <form @submit.prevent="submitForm" class="loginForm__form">
+          <input type="email" class="loginForm__input" placeholder="email" v-model="email" />
+          <input
+            type="password"
+            class="loginForm__input"
+            placeholder="password"
+            v-model="password"
+          />
+          <button type="submit" class="loginForm__btn">Get started</button>
         </form>
       </div>
       <div class="loginPage__logo logo">

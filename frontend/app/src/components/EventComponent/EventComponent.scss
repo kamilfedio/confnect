@@ -1,9 +1,10 @@
 .event {
   display: flex;
-  width: 44%;
-  height: 22%;
+  width: 532px;
+  height: 200px;
   background-color: $mainDarkBlue;
   border-radius: 40px 0 0 40px;
+  margin-bottom: 50px;
 
   &__img {
     position: relative;
