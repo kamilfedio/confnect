@@ -12,62 +12,54 @@ from source.crud.tokens import tokens_crud
 from source.models.token import Token
 from source.utils.enums import TokenType
 
-class Authenticate:
-    pwd_context = CryptContext(schemes=[secret_config.ALGORITHM], deprecated="auto")
+pwd_context = CryptContext(schemes=[secret_config.ALGORITHM], deprecated="auto")
 
-    @classmethod
-    def verify_password(cls, plain_password: str, hashed_password: str) -> bool:
-        return cls.pwd_context.verify(plain_password, hashed_password)
-    
-    @classmethod
-    def get_password_hash(cls, password: str) -> str:
-        return cls.pwd_context.hash(password)
-    
-    @classmethod
-    async def authenticate_user(cls, email: str, password: str, session: AsyncSession) -> UserRead | bool:
-        user: User | None = await user_crud.get_by_email(email, session)
-        if not user:
-            return False
-        if not cls.verify_password(password, user.hashed_password):
-            return False
-        
-        return user
-    
-    @classmethod
-    async def create_token(cls, user_id: int,  session: AsyncSession, type: str = TokenType.ACCESS) -> str:
-        async def _disable_old_access_token(user_id: int, session: AsyncSession) -> None:
-            available_access_tokens: list[Token] = await tokens_crud.get_user_tokens_by_id(user_id, TokenType.ACCESS, session)
-            for token in available_access_tokens:
-                await tokens_crud.disable_token(token.token, session)
+@classmethod
+def verify_password(cls, plain_password: str, hashed_password: str) -> bool:
+    return cls.pwd_context.verify(plain_password, hashed_password)
 
-        match type:
-            case TokenType.ACCESS:
-                expirates = secret_config.ACCESS_TOKEN_EXPIRE_MINUTES
-                await _disable_old_access_token(user_id, session)
-            case TokenType.REFRESH:
-                expirates = secret_config.REFRESH_TOKEN_EXPIRE_MINUTES
-            case _:  
-                raise ValueError('Invalid token type')
-        expire = datetime.now() + timedelta(minutes=expirates)
-        token_data = secrets.token_urlsafe(32)
-        token = Token(token=token_data, user_id=user_id, type=type, expiration_date=expire)
-        await tokens_crud.create(token, session)
-        
-        return token_data
-    
-    @staticmethod
-    async def get_token(token: str, session: AsyncSession, token_type: TokenType = TokenType.ACCESS) -> Token | None:
-        return await tokens_crud.get_by_id(id=token, session=session, token_type=token_type)
+def get_password_hash(password: str) -> str:
+    return pwd_context.hash(password)
 
-    @classmethod
-    async def verify_refresh_token(cls, token: str, session: AsyncSession) -> bool:
-        new_token: Token | None = await cls.get_token(token, session, token_type=TokenType.REFRESH)
-        if new_token is None:
-            raise HTTPException(status_code=401, detail="Invalid refresh token")
-        if new_token.expirated:
-            raise HTTPException(status_code=401, detail="Refresh token expired")
-        
-        return True
+async def authenticate_user(email: str, password: str, session: AsyncSession) -> UserRead | bool:
+    user: User | None = await user_crud.get_by_email(email, session)
+    if not user:
+        return False
+    if not verify_password(password, user.hashed_password):
+        return False
     
+    return user
 
-auth = Authenticate()
+async def create_token(user_id: int,  session: AsyncSession, type: str = TokenType.ACCESS) -> str:
+    async def _disable_old_access_token(user_id: int, session: AsyncSession) -> None:
+        available_access_tokens: list[Token] = await tokens_crud.get_user_tokens_by_id(user_id, TokenType.ACCESS, session)
+        for token in available_access_tokens:
+            await tokens_crud.disable_token(token.token, session)
+
+    match type:
+        case TokenType.ACCESS:
+            expirates = secret_config.ACCESS_TOKEN_EXPIRE_MINUTES
+            await _disable_old_access_token(user_id, session)
+        case TokenType.REFRESH:
+            expirates = secret_config.REFRESH_TOKEN_EXPIRE_MINUTES
+        case _:  
+            raise ValueError('Invalid token type')
+    expire = datetime.now() + timedelta(minutes=expirates)
+    token_data = secrets.token_urlsafe(32)
+    token = Token(token=token_data, user_id=user_id, type=type, expiration_date=expire)
+    await tokens_crud.create(token, session)
+    
+    return token_data
+
+async def get_token(token: str, session: AsyncSession, token_type: TokenType = TokenType.ACCESS) -> Token | None:
+    return await tokens_crud.get_by_id(id=token, session=session, token_type=token_type)
+
+async def verify_refresh_token(token: str, session: AsyncSession) -> bool:
+    new_token: Token | None = await get_token(token, session, token_type=TokenType.REFRESH)
+    if new_token is None:
+        raise HTTPException(status_code=401, detail="Invalid refresh token")
+    if new_token.expirated:
+        raise HTTPException(status_code=401, detail="Refresh token expired")
+    
+    return True
+    

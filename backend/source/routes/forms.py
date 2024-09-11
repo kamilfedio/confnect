@@ -4,12 +4,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from source.schemas.form import FormRead, FormCreate
 from source.database import get_async_session
-from source.dependencies.depends import dependencies
+from source.dependencies.depends import pagination
 from source.crud.forms import crud
 router = APIRouter()
 
 @router.get('/', response_model=list[FormRead])
-async def get_all_forms(pagination: tuple[int, int] = Depends(dependencies.pagination), session: AsyncSession = Depends(get_async_session)) -> Sequence[FormRead]:
+async def get_all_forms(pagination: tuple[int, int] = Depends(pagination), session: AsyncSession = Depends(get_async_session)) -> Sequence[FormRead]:
     res = await crud.get_all(pagination, session)
     return res
 
