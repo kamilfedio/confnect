@@ -44,7 +44,7 @@ routes = [
 ]
 
 for route in routes:
-    app.include_router(route[0], prefix=route[1], tags=[route[1][1:]])
+    app.include_router(route[0], prefix=f'{routes_config.version}/{route[1]}', tags=[route[1]])
 
 @app.get("/")
 async def root() -> Response:
