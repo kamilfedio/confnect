@@ -14,6 +14,11 @@ export default defineComponent({
     const password = ref<string>('')
     const acceptRules = ref<boolean>(false)
 
+    const nameError = ref<string>('')
+    const emailError = ref<string>('')
+    const passwordError = ref<string>('')
+    const rulesError = ref<string>('')
+
     //Router
     const router = useRouter()
 
@@ -22,14 +27,8 @@ export default defineComponent({
     }
 
     const submitForm = async () => {
-      // Sprawdzenie, czy użytkownik zaakceptował zasady
-      if (!acceptRules.value) {
-        alert('You must accept the rules to register!')
-        return
-      }
-
       try {
-        const response = await fetch('http://0.0.0.0:8000/auth/register', {
+        const response = await fetch('http://0.0.0.0:8000/register', {
           method: 'POST',
           headers: {
             Accept: 'application/json',
@@ -45,14 +44,14 @@ export default defineComponent({
           let errorMessage = 'Unknown error occurred.'
 
           if (response.status === 400) {
-            errorMessage = 'Invalid data. Please check your input and try again.'
+            emailError.value = 'The email address is already used'
           } else if (response.status === 401) {
             errorMessage = 'Unauthorized. Please try again.'
           } else if (response.status === 500) {
             errorMessage = 'Server error. Please try again later.'
           }
 
-          throw new Error(errorMessage)
+          throw alert(errorMessage)
         }
 
         const data = await response.json()
@@ -62,6 +61,7 @@ export default defineComponent({
         if (access_token && refresh_token) {
           localStorage.setItem('accessToken', access_token)
           localStorage.setItem('refreshToken', refresh_token)
+          emailError
 
           router.push({ name: 'UserPage' })
         } else {
@@ -77,6 +77,10 @@ export default defineComponent({
       name,
       password,
       acceptRules,
+      emailError,
+      nameError,
+      passwordError,
+      rulesError,
       goToLogin,
       submitForm
     }

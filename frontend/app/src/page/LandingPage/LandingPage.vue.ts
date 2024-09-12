@@ -105,7 +105,7 @@ export default defineComponent({
       }
 
       try {
-        const response = await fetch('http://0.0.0.0:8000/forms/', {
+        const response = await fetch('http://0.0.0.0:8000/api/v1/forms/', {
           method: 'POST',
           headers: {
             Accept: 'application/json',
