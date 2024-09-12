@@ -5,12 +5,19 @@
       <div class="loginPage__loginForm loginForm">
         <p class="loginForm__text">Again we us. We are so glad you love us!</p>
         <form @submit.prevent="submitForm" class="loginForm__form">
-          <input type="email" class="loginForm__input" placeholder="email" v-model="email" />
+          <input
+            type="email"
+            class="loginForm__input"
+            placeholder="email"
+            v-model="email"
+            required
+          />
           <input
             type="password"
             class="loginForm__input"
             placeholder="password"
             v-model="password"
+            required
           />
           <button type="submit" class="loginForm__btn">Get started</button>
         </form>

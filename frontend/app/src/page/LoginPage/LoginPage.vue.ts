@@ -25,7 +25,7 @@ export default defineComponent({
         formData.append('password', password.value)
         formData.append('grant_type', 'password')
 
-        const response = await fetch('http://0.0.0.0:8000/auth/token', {
+        const response = await fetch('http://0.0.0.0:8000/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -45,7 +45,7 @@ export default defineComponent({
             errorMessage = 'Server error. Please try again later.'
           }
 
-          throw new Error(errorMessage)
+          throw alert(errorMessage)
         }
 
         const data = await response.json()
