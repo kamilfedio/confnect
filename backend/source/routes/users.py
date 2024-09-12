@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from source.models.user import User
 from source.database import get_async_session
 from source.schemas.user import UserRead, UserUpdate, UserPasswordUpdate
-from source.crud.user import user_crud
+import source.crud.user as user_crud
 from source.dependencies.depends import get_current_user
 from source.utils.authenticate import verify_password, get_password_hash
 

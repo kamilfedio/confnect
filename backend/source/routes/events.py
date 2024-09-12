@@ -11,9 +11,9 @@ from source.models.user import User
 from source.models.invitation_code import InvitationCode
 from source.schemas.event import EventRead, EventUpdate, EventCreate
 from source.dependencies.depends import pagination, get_current_user
-from source.crud.events import event_crud
-from source.crud.invitation_codes import codes_crud
-from source.crud.feedback import feedback_crud
+import source.crud.events as event_crud
+import source.crud.invitation_codes as codes_crud
+import source.crud.feedback as feedback_crud
 from source.models.event import Event
 from source.utils.codes import create_codes, create_qr_code
 

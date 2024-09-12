@@ -7,8 +7,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from source.models.user import User
 from source.schemas.user import UserRead
 from source.config.secret import secret_config
-from source.crud.user import user_crud
-from source.crud.tokens import tokens_crud
+import source.crud.user as user_crud
+import source.crud.tokens as tokens_crud
 from source.models.token import Token
 from source.utils.enums import TokenType
 

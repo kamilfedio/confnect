@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import status, HTTPException
 
-from source.crud.invitation_codes import codes_crud
+import source.crud.invitation_codes as codes_crud
 from source.models.invitation_code import InvitationCode
 from source.config.secret import secret_config
 

@@ -8,7 +8,7 @@ from source.database import get_async_session
 from source.schemas.user import UserRead, UserCreate
 from source.utils.authenticate import get_password_hash, create_token, authenticate_user, verify_refresh_token, get_token
 from source.models.user import User
-from source.crud.user import user_crud
+import source.crud.user as user_crud
 from source.utils.enums import TokenType
 
 
