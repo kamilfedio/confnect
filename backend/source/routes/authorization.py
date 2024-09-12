@@ -64,7 +64,7 @@ async def register(
 
 
 @router.post("/login")
-async def create_token(
+async def login(
     form_data: OAuth2PasswordRequestForm = Depends(OAuth2PasswordRequestForm),
     session: AsyncSession = Depends(get_async_session),
 ) -> dict[str, str]:
