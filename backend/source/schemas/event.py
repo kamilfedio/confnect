@@ -2,28 +2,53 @@ from datetime import datetime
 from source.schemas.base import Base
 from source.schemas.feedback import FeedbackRead
 
+
 class Event(Base):
+    """
+    event object base
+    """
+
     name: str
     description: str
     place: str
     date: datetime | None
     optional_info: str | None
 
+
 class EventCreate(Event):
+    """
+    create form object
+    """
+
     pass
 
+
 class EventUpdate(Base):
+    """
+    update event data object
+    """
+
     name: str | None = None
     description: str | None = None
     place: str | None = None
     date: datetime | None = None
     optional_info: str | None = None
 
+
 class EventRead(Event):
+    """
+    stores shortcut data object
+    """
+
     user_id: int
     id: int
     created_at: datetime
     updated_at: datetime | None
 
+
 class EventReadFull(EventRead):
+    """
+    stores all data object
+    """
+
     feedbacks: list[FeedbackRead]

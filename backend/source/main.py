@@ -11,6 +11,7 @@ from source.routes.test import router as test_router
 from source.routes.users import router as users_router
 from source.routes.events import router as events_router
 
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """
@@ -19,6 +20,7 @@ async def lifespan(app: FastAPI):
         app (FastAPI): FastAPI
     """
     yield
+
 
 app = FastAPI(
     title=Config.title,
@@ -37,15 +39,29 @@ app.add_middleware(
 
 routes = [
     (forms_router, routes_config.forms),
-    (auth_router, routes_config.auth),
     (test_router, routes_config.test),
     (users_router, routes_config.users),
     (events_router, routes_config.events),
 ]
 
+# adding routes with prefix and tags
 for route in routes:
-    app.include_router(route[0], prefix=f'{routes_config.version}/{route[1]}', tags=[route[1]])
+    app.include_router(
+        route[0], prefix=f"{routes_config.version}/{route[1]}", tags=[route[1]]
+    )
+
+# auth router without prefix
+app.include_router(auth_router, tags=[routes_config.auth])
+
 
 @app.get("/")
 async def root() -> Response:
-    return Response(status_code=status.HTTP_200_OK, content=f'{Config.title} - {Config.version} is running')
+    """
+        return default root response
+    Returns:
+        Response: information about version
+    """
+    return Response(
+        status_code=status.HTTP_200_OK,
+        content=f"{Config.title} - {Config.version} is running",
+    )

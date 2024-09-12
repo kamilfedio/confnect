@@ -1,6 +1,10 @@
 from enum import Enum
 
+
 class TokenType(Enum):
-    ACCESS = 'access'
-    REFRESH = 'refresh'
-    
+    """
+    token types
+    """
+
+    ACCESS = "access"
+    REFRESH = "refresh"

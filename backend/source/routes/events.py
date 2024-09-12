@@ -26,6 +26,16 @@ async def get_all_user_events(
     pagination: tuple[int, int] = Depends(pagination),
     session: AsyncSession = Depends(get_async_session),
 ) -> Sequence[EventRead]:
+    """
+        returns all user events
+    Args:
+        user (User, optional): current user. Defaults to Depends(get_current_user).
+        pagination (tuple[int, int], optional): pagination - offset&limit. Defaults to Depends(pagination).
+        session (AsyncSession, optional): current session. Defaults to Depends(get_async_session).
+
+    Returns:
+        Sequence[EventRead]: list of events objects
+    """
     return await event_crud.get_all(user.id, pagination, session)
 
 
@@ -33,6 +43,18 @@ async def get_all_user_events(
 async def get_event_by_id(
     id: int, session: AsyncSession = Depends(get_async_session)
 ) -> EventRead:
+    """
+        returns event object by id
+    Args:
+        id (int): event id
+        session (AsyncSession, optional): current session. Defaults to Depends(get_async_session).
+
+    Raises:
+        HTTPException: if event doesn't exists
+
+    Returns:
+        EventRead: event data object
+    """
     event = await event_crud.get_by_id(id, session)
     if not event:
         raise HTTPException(
@@ -48,6 +70,16 @@ async def create_event(
     user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_async_session),
 ) -> EventRead:
+    """
+        create event
+    Args:
+        event (EventCreate): event object
+        user (User, optional): current user. Defaults to Depends(get_current_user).
+        session (AsyncSession, optional): current session. Defaults to Depends(get_async_session).
+
+    Returns:
+        EventRead: event data object
+    """
     new_event = Event(**event.model_dump(), user_id=user.id)
     return await event_crud.create(new_event, session)
 
@@ -59,6 +91,20 @@ async def update_event(
     user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_async_session),
 ) -> EventRead:
+    """
+        update event data
+    Args:
+        id (int): event id
+        event (EventUpdate): event data object
+        user (User, optional): current user. Defaults to Depends(get_current_user).
+        session (AsyncSession, optional): current session. Defaults to Depends(get_async_session).
+
+    Raises:
+        HTTPException: if event doesn't exists
+
+    Returns:
+        EventRead: event data object
+    """
     new_event = event.model_dump(exclude_unset=True)
     event: Event | None = await event_crud.get_by_id(id, session)
     if not event:
@@ -78,6 +124,16 @@ async def delete_event(
     user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_async_session),
 ) -> Response:
+    """
+        delete event by id
+    Args:
+        id (int): event id
+        user (User, optional): current id. Defaults to Depends(get_current_user).
+        session (AsyncSession, optional): current session. Defaults to Depends(get_async_session).
+
+    Returns:
+        Response: status code
+    """
     await event_crud.delete(id, session)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
@@ -88,6 +144,19 @@ async def generate_invitation_codes(
     user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_async_session),
 ) -> str:
+    """
+        return invitation code
+    Args:
+        id (int): event id
+        user (User, optional): current user. Defaults to Depends(get_current_user).
+        session (AsyncSession, optional): current session. Defaults to Depends(get_async_session).
+
+    Raises:
+        HTTPException: if event doesn't exists
+
+    Returns:
+        str: invitation code
+    """
     event = await event_crud.get_by_id(id, session)
     if not event:
         raise HTTPException(
@@ -105,6 +174,16 @@ async def get_qr_image(
     user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_async_session),
 ):
+    """
+        returns qr code
+    Args:
+        code (str): code
+        user (User, optional): current user. Defaults to Depends(get_current_user).
+        session (AsyncSession, optional): current session. Defaults to Depends(get_async_session).
+
+    Returns:
+        _type_: streming response with qr code image
+    """
     qr_code: io.BytesIO = await create_qr_code(code, session)
 
     return StreamingResponse(qr_code, media_type="image/png")
@@ -114,6 +193,18 @@ async def get_qr_image(
 async def join_event(
     code: str, session: AsyncSession = Depends(get_async_session)
 ) -> Response:
+    """
+        join event by invitation code
+    Args:
+        code (str): code
+        session (AsyncSession, optional): current session. Defaults to Depends(get_async_session).
+
+    Raises:
+        HTTPException: if code doesn't exists
+
+    Returns:
+        Response: event data object
+    """
     invitation_code: InvitationCode | None = await codes_crud.get_by_code(code, session)
     if not invitation_code:
         raise HTTPException(
@@ -129,8 +220,18 @@ async def get_user_feedbacks(
     user: User = Depends(get_current_user),
     pagination: tuple[int, int] = Depends(pagination),
     session: AsyncSession = Depends(get_async_session),
-) -> list[FeedbackRead]:
-    return await feedback_crud.get_all(user.id, pagination, session)
+) -> Sequence[FeedbackRead]:
+    """
+        get all user events
+    Args:
+        user (User, optional): current user. Defaults to Depends(get_current_user).
+        pagination (tuple[int, int], optional): paginatino - offset&limit. Defaults to Depends(pagination).
+        session (AsyncSession, optional): current session. Defaults to Depends(get_async_session).
+
+    Returns:
+        Sequence[FeedbackRead]: list of feedbacks data object
+    """
+    return await feedback_crud.get_all_user(user.id, pagination, session)
 
 
 @router.get("/{event_id}/feedback", response_model=list[FeedbackRead])
@@ -138,7 +239,17 @@ async def get_event_feedbacks(
     event_id: int,
     pagination: tuple[int, int] = Depends(pagination),
     session: AsyncSession = Depends(get_async_session),
-) -> list[FeedbackRead]:
+) -> Sequence[FeedbackRead]:
+    """
+        return all event feedbacks
+    Args:
+        event_id (int): event id
+        pagination (tuple[int, int], optional): pagination - offset&limit. Defaults to Depends(pagination).
+        session (AsyncSession, optional): current session. Defaults to Depends(get_async_session).
+
+    Returns:
+        Sequence[FeedbackRead]: list of feedbacks data object
+    """
     return await feedback_crud.get_all(event_id, pagination, session)
 
 
@@ -146,6 +257,18 @@ async def get_event_feedbacks(
 async def get_feedback_by_id(
     id: int, session: AsyncSession = Depends(get_async_session)
 ) -> FeedbackRead:
+    """
+        get feedback by id
+    Args:
+        id (int): feedback id
+        session (AsyncSession, optional): current session. Defaults to Depends(get_async_session).
+
+    Raises:
+        HTTPException: if feedback doesn't exists
+
+    Returns:
+        FeedbackRead: feedback data object
+    """
     feedback: Feedback | None = await feedback_crud.get_by_id(id, session)
     if not feedback:
         raise HTTPException(
@@ -161,6 +284,16 @@ async def create_feedback(
     feedback: FeedbackCreate,
     session: AsyncSession = Depends(get_async_session),
 ) -> FeedbackRead:
+    """
+        create feedback
+    Args:
+        event_id (int): event id
+        feedback (FeedbackCreate): feedback object data
+        session (AsyncSession, optional): current session. Defaults to Depends(get_async_session).
+
+    Returns:
+        FeedbackRead: feedback data object
+    """
     feedback = FeedbackRead(**feedback.model_dump(), event_id=event_id)
     return await feedback_crud.create(feedback, session)
 
@@ -171,5 +304,15 @@ async def delete_feedback_by_id(
     user: User = Depends(get_current_user),
     session: AsyncSession = Depends(get_async_session),
 ) -> Response:
+    """
+        delete feedback by id
+    Args:
+        id (int): feedback id
+        user (User, optional): current user. Defaults to Depends(get_current_user).
+        session (AsyncSession, optional): current session. Defaults to Depends(get_async_session).
+
+    Returns:
+        Response: status code
+    """
     await feedback_crud.delete_by_id(id, session)
     return Response(status_code=status.HTTP_204_NO_CONTENT)

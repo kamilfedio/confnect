@@ -7,14 +7,15 @@ engine = create_async_engine(db_config.database_url, echo=True)
 
 async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
 
+
 async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
     """generrated async session
 
     Returns:
-        AsyncGenerator[AsyncSession, None]: _description_
+        AsyncGenerator[AsyncSession, None]: async generator
 
     Yields:
-        Iterator[AsyncGenerator[AsyncSession, None]]: _description_
+        Iterator[AsyncGenerator[AsyncSession, None]]: current session
     """
     async with async_session_maker() as session:
         yield session
