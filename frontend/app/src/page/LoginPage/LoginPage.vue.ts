@@ -1,6 +1,7 @@
 import { defineComponent, ref } from 'vue'
 import AuthBackground from '@/components/AuthBackground/AuthBackground.vue'
 import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/userStore'
 
 export default defineComponent({
   name: 'LandingPage',
@@ -13,6 +14,7 @@ export default defineComponent({
     const password = ref<string>('')
 
     const router = useRouter()
+    const userStore = useUserStore()
 
     const goToRegister = () => {
       router.push('/register')
@@ -53,8 +55,8 @@ export default defineComponent({
         const { access_token, refresh_token } = data
 
         if (access_token && refresh_token) {
-          localStorage.setItem('accessToken', access_token)
-          localStorage.setItem('refreshToken', refresh_token)
+          userStore.setAccessToken(access_token)
+          document.cookie = `refreshToken=${refresh_token}; path=/; max-age=604800; secure; SameSite=Strict`
 
           router.push({ name: 'UserPage' })
         } else {
@@ -64,6 +66,7 @@ export default defineComponent({
         console.error('Error during login:', error)
       }
     }
+
     // Zwracamy zmienne i funkcje, które będą używane w szablonie
     return {
       email,

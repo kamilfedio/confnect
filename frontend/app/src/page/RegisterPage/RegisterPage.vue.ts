@@ -1,6 +1,7 @@
 import { defineComponent, ref } from 'vue'
 import AuthBackground from '@/components/AuthBackground/AuthBackground.vue'
 import { useRouter } from 'vue-router'
+import { useUserStore } from '@/stores/userStore'
 
 export default defineComponent({
   name: 'LandingPage',
@@ -19,8 +20,8 @@ export default defineComponent({
     const passwordError = ref<string>('')
     const rulesError = ref<string>('')
 
-    //Router
     const router = useRouter()
+    const userStore = useUserStore()
 
     const goToLogin = () => {
       router.push('/login')
@@ -40,6 +41,7 @@ export default defineComponent({
             password: password.value
           })
         })
+
         if (!response.ok) {
           let errorMessage = 'Unknown error occurred.'
 
@@ -59,9 +61,8 @@ export default defineComponent({
         const { access_token, refresh_token } = data
 
         if (access_token && refresh_token) {
-          localStorage.setItem('accessToken', access_token)
-          localStorage.setItem('refreshToken', refresh_token)
-          emailError
+          userStore.setAccessToken(access_token)
+          document.cookie = `refreshToken=${refresh_token}; path=/; max-age=604800; secure; SameSite=Strict`
 
           router.push({ name: 'UserPage' })
         } else {
