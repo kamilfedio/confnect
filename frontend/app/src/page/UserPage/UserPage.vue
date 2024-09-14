@@ -38,6 +38,7 @@
           <SearchPanel />
         </div>
       </div>
+      <AddEvent />
     </main>
   </div>
 </template>

@@ -6,8 +6,8 @@
         <div class="event__number">#1</div>
         <p class="event__status">Status: <span class="event__statusDate">closed</span></p>
         <p class="event__date">19th June</p>
-        <p class="event__location">Wrocław, Pasaz Grunwaldzki</p>
-        <p class="event__place">Office meeting</p>
+        <p class="event__place">Wrocław, Pasaz Grunwaldzki</p>
+        <p class="event__location">Office meeting</p>
       </div>
       <div class="event__buttons">
         <div class="event__clickMe">

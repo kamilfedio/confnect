@@ -1,7 +1,6 @@
 import { defineComponent, ref } from 'vue'
 import AuthBackground from '@/components/AuthBackground/AuthBackground.vue'
 import { useRouter } from 'vue-router'
-import { useUserStore } from '@/stores/userStore'
 
 export default defineComponent({
   name: 'LandingPage',
@@ -14,57 +13,58 @@ export default defineComponent({
     const password = ref<string>('')
 
     const router = useRouter()
-    const userStore = useUserStore()
 
     const goToRegister = () => {
       router.push('/register')
     }
 
-    const submitForm = async () => {
-      try {
-        const formData = new URLSearchParams()
-        formData.append('username', email.value)
-        formData.append('password', password.value)
-        formData.append('grant_type', 'password')
+    const submitForm = () => {
+      const formData = new URLSearchParams()
+      formData.append('username', email.value)
+      formData.append('password', password.value)
+      formData.append('grant_type', 'password')
 
-        const response = await fetch('http://0.0.0.0:8000/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            Accept: 'application/json'
-          },
-          body: formData.toString()
-        })
+      fetch('http://0.0.0.0:8000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Accept: 'application/json'
+        },
+        body: formData.toString()
+      })
+        .then((response) => {
+          if (!response.ok) {
+            let errorMessage = 'Unknown error occurred.'
 
-        if (!response.ok) {
-          let errorMessage = 'Unknown error occurred.'
+            if (response.status === 400) {
+              errorMessage = 'Invalid data. Please check your input and try again.'
+            } else if (response.status === 401) {
+              errorMessage = 'Incorrect email or password'
+            } else if (response.status === 500) {
+              errorMessage = 'Server error. Please try again later.'
+            }
 
-          if (response.status === 400) {
-            errorMessage = 'Invalid data. Please check your input and try again.'
-          } else if (response.status === 401) {
-            errorMessage = 'Incorrect email or password'
-          } else if (response.status === 500) {
-            errorMessage = 'Server error. Please try again later.'
+            alert(errorMessage)
+            return Promise.reject(new Error(errorMessage))
           }
+          return response.json()
+        })
+        .then((data) => {
+          const { access_token, refresh_token } = data
 
-          throw alert(errorMessage)
-        }
+          if (access_token && refresh_token) {
+            localStorage.setItem('accessToken', access_token)
 
-        const data = await response.json()
+            document.cookie = `refreshToken=${refresh_token}; path=/; max-age=604800; secure; SameSite=Strict`
 
-        const { access_token, refresh_token } = data
-
-        if (access_token && refresh_token) {
-          userStore.setAccessToken(access_token)
-          document.cookie = `refreshToken=${refresh_token}; path=/; max-age=604800; secure; SameSite=Strict`
-
-          router.push({ name: 'UserPage' })
-        } else {
-          throw new Error('Missing tokens in response')
-        }
-      } catch (error) {
-        console.error('Error during login:', error)
-      }
+            router.push({ name: 'UserPage' })
+          } else {
+            throw new Error('Missing tokens in response')
+          }
+        })
+        .catch((error) => {
+          console.error('Error during login:', error.message)
+        })
     }
 
     // Zwracamy zmienne i funkcje, które będą używane w szablonie

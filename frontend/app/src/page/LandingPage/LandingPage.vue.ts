@@ -119,7 +119,6 @@ export default defineComponent({
         })
 
         const data = await response.json()
-        console.log(data)
 
         // Resetowanie pól formularza po udanym wysłaniu
         userMessage.value = ''

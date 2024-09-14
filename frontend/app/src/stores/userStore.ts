@@ -1,31 +1,54 @@
 import { defineStore } from 'pinia'
+import { refreshAccessToken } from '../utils/auth.js'
 
-// Interfejs dla danych użytkownika
-interface User {
-  email: string
+interface Event {
   name: string
+  description: string
+  place: string
+  date: string
+  optional_info: string
+  status: string
 }
 
 // Definiowanie store dla użytkownika
 export const useUserStore = defineStore('user', {
   state: () => ({
-    accessToken: null as string | null
+    events: [] as Event[]
   }),
 
   actions: {
-    // Zapisanie access tokena w store
-    setAccessToken(token: string) {
-      this.accessToken = token
-    },
-
-    // Usunięcie access tokena (np. podczas wylogowania)
-    clearAccessToken() {
-      this.accessToken = null
+    fetchUserEvents() {
+      fetch('http://0.0.0.0:8000/api/v1/events/', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+          'Content-Type': 'application/json'
+        }
+      })
+        .then((response) => {
+          if (!response.ok) {
+            if (response.status === 401) {
+              return refreshAccessToken().then(() => {
+                return fetch('http://0.0.0.0:8000/api/v1/events/', {
+                  method: 'GET',
+                  headers: {
+                    Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+                    'Content-Type': 'application/json'
+                  }
+                })
+              })
+            }
+            throw new Error('Failed to fetch events')
+          }
+          return response.json()
+        })
+        .then((data) => {
+          this.events = data
+          console.log(this.events)
+        })
+        .catch((error) => {
+          console.error('Error fetching events:', error.message)
+        })
     }
-  },
-
-  getters: {
-    // Sprawdzenie, czy użytkownik jest zalogowany
-    isLoggedIn: (state): boolean => !!state.accessToken
   }
 })
