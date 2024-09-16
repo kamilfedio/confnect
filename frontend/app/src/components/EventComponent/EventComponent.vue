@@ -3,11 +3,11 @@
     <div class="event__img"></div>
     <div class="event__data">
       <div class="event__informations">
-        <div class="event__number">#1</div>
+        <div class="event__number">#{{ event.id }}</div>
         <p class="event__status">Status: <span class="event__statusDate">closed</span></p>
-        <p class="event__date">19th June</p>
-        <p class="event__location">Wrocław, Pasaz Grunwaldzki</p>
-        <p class="event__place">Office meeting</p>
+        <p class="event__date">{{ event.date }}</p>
+        <p class="event__place">{{ event.place }}</p>
+        <p class="event__location">Office meeting</p>
       </div>
       <div class="event__buttons">
         <div class="event__clickMe">

@@ -132,6 +132,19 @@ header {
   margin: 0 auto;
   width: 80%;
 
+  &__allEvents {
+    text-align: center;
+    font-size: 1.6rem;
+    text-decoration: underline;
+    letter-spacing: 1px;
+    color: $mainDarkBlue;
+    cursor: pointer;
+
+    &:hover {
+      font-size: 1.7rem;
+    }
+  }
+
   .addEvent {
     position: relative;
     display: flex;
@@ -140,6 +153,7 @@ header {
     background-color: $lightGrey;
     border-radius: 40px 0 0 40px;
     margin-bottom: 50px;
+    cursor: pointer;
 
     &__txt {
       position: absolute;
@@ -148,6 +162,13 @@ header {
       left: 50%;
       transform: translate(-50%, -50%);
       font-size: 3.2rem;
+      transition: 0.3s;
+    }
+
+    &:hover {
+      .addEvent__txt {
+        font-size: 4rem;
+      }
     }
   }
 }

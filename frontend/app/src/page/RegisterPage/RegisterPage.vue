@@ -3,7 +3,7 @@
     <AuthBackground />
     <div class="registerPage">
       <div class="registerPage__registerForm registerForm">
-        <p class="registerForm__text">
+        <p v-if="emailError.value" class="registerForm__text">
           NIce to see you! We hope you will find everything you need here!
         </p>
         <form @submit.prevent="submitForm" class="registerForm__form">

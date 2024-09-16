@@ -19,58 +19,60 @@ export default defineComponent({
     const passwordError = ref<string>('')
     const rulesError = ref<string>('')
 
-    //Router
     const router = useRouter()
 
     const goToLogin = () => {
       router.push('/login')
     }
 
-    const submitForm = async () => {
-      try {
-        const response = await fetch('http://0.0.0.0:8000/register', {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            email: email.value,
-            name: name.value,
-            password: password.value
-          })
+    const submitForm = () => {
+      fetch('http://0.0.0.0:8000/register', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: email.value,
+          name: name.value,
+          password: password.value
         })
-        if (!response.ok) {
-          let errorMessage = 'Unknown error occurred.'
+      })
+        .then((response) => {
+          if (!response.ok) {
+            let errorMessage = 'Unknown error occurred.'
 
-          if (response.status === 400) {
-            emailError.value = 'The email address is already used'
-          } else if (response.status === 401) {
-            errorMessage = 'Unauthorized. Please try again.'
-          } else if (response.status === 500) {
-            errorMessage = 'Server error. Please try again later.'
+            if (response.status === 400) {
+              emailError.value = 'The email address is already used'
+            } else if (response.status === 401) {
+              errorMessage = 'Unauthorized. Please try again.'
+            } else if (response.status === 500) {
+              errorMessage = 'Server error. Please try again later.'
+            }
+
+            alert(errorMessage)
+            return Promise.reject(new Error(errorMessage))
           }
+          return response.json()
+        })
+        .then((data) => {
+          const { access_token, refresh_token } = data
 
-          throw alert(errorMessage)
-        }
+          if (access_token && refresh_token) {
+            localStorage.setItem('accessToken', access_token)
 
-        const data = await response.json()
+            document.cookie = `refreshToken=${refresh_token}; path=/; max-age=604800; secure; SameSite=Strict`
 
-        const { access_token, refresh_token } = data
-
-        if (access_token && refresh_token) {
-          localStorage.setItem('accessToken', access_token)
-          localStorage.setItem('refreshToken', refresh_token)
-          emailError
-
-          router.push({ name: 'UserPage' })
-        } else {
-          throw new Error('Missing tokens in response')
-        }
-      } catch (error) {
-        console.error('Error during registration:', error)
-      }
+            router.push({ name: 'UserPage' })
+          } else {
+            throw new Error('Missing tokens in response')
+          }
+        })
+        .catch((error) => {
+          console.error('Error during registration:', error.message)
+        })
     }
+
     // Zwracamy zmienne i funkcje, które będą używane w szablonie
     return {
       email,
