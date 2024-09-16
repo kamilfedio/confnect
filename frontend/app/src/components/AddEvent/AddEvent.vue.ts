@@ -1,16 +1,25 @@
 import { defineComponent, ref } from 'vue'
 import { refreshAccessToken } from '../../utils/auth.js'
+import { useUserStore } from '@/stores/userStore.js'
 
 export default defineComponent({
   name: 'AddEvent',
   components: {},
-  setup() {
+  props: {
+    addEventDialogOpen: {
+      type: Boolean,
+      required: true
+    }
+  },
+  setup(props, { emit }) {
     const name = ref<string>('')
     const description = ref<string>('')
     const place = ref<string>('')
     const date = ref<string>('')
     const optional_info = ref<string>('')
-    const validationErrors = ref<any>(null) // Zmienna do przechowywania błędów walidacji
+    const validationErrors = ref<any>(null)
+
+    const userStore = useUserStore()
 
     const submitForm = () => {
       validationErrors.value = null // Resetowanie błędów przed wysłaniem nowego żądania
@@ -61,6 +70,22 @@ export default defineComponent({
         .catch((error) => {
           console.error('Error:', error.message)
         })
+
+      closeDialog()
+      name.value = ''
+      description.value = ''
+      place.value = ''
+      date.value = ''
+      optional_info.value = ''
+    }
+
+    const closeDialog = () => {
+      emit('close-dialog')
+      name.value = ''
+      description.value = ''
+      place.value = ''
+      date.value = ''
+      optional_info.value = ''
     }
 
     // Zwracamy zmienne i funkcje, które będą używane w szablonie
@@ -71,7 +96,8 @@ export default defineComponent({
       date,
       optional_info,
       validationErrors, // Zwracamy błędy walidacji
-      submitForm
+      submitForm,
+      closeDialog
     }
   }
 })

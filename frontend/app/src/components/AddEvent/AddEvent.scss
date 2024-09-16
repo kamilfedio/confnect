@@ -1,4 +1,63 @@
-.bgc {
+.addEventDialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 60vw;
+  height: 70vh;
+  transform: translate(-50%, -50%);
   background-color: white;
-  border: 1px solid black;
+  border-radius: 40px;
+  box-shadow: 0 0 10px $mainDarkBlue;
+  padding: 30px 80px;
+
+  &__title {
+    text-align: center;
+    font-size: 4rem;
+  }
+
+  &__icon {
+    position: absolute;
+    top: 35px;
+    right: 30px;
+    font-size: 3rem;
+    color: $mainDarkBlue;
+    cursor: pointer;
+  }
+
+  &__form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  &__input {
+    padding: 10px;
+    width: 45%;
+    margin: 20px 0;
+    border: 1px solid $mainDarkBlue;
+  }
+
+  &__textarea {
+    padding: 10px;
+    width: 1000%;
+    height: 100px;
+    border: 1px solid $mainDarkBlue;
+  }
+
+  &__button {
+    width: 195px;
+    font-size: 1.6rem;
+    border-radius: 40px;
+    border: 1px solid $mainDarkBlue;
+    background-color: transparent;
+    color: $mainDarkBlue;
+    padding: 8px 0;
+    cursor: pointer;
+
+    &:hover {
+      color: $mainBgc;
+      background-color: $mainDarkBlue;
+    }
+  }
 }

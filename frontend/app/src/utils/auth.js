@@ -9,7 +9,6 @@ export const getRefreshTokenFromCookies = () => {
 // Sprawdzenie, czy użytkownik jest zalogowany na podstawie obecności access token
 export const isAuthenticated = () => {
   const refreshToken = getRefreshTokenFromCookies()
-  console.log(refreshToken)
   return !!refreshToken
 }
 
@@ -21,8 +20,6 @@ export const refreshAccessToken = () => {
     console.error('Refresh token is missing')
     return Promise.reject(new Error('Refresh token is missing'))
   }
-
-  console.log('Using refresh token:', refreshToken)
 
   const refreshUrl = `http://0.0.0.0:8000/refresh?refresh_token=${refreshToken}`
 

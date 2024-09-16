@@ -27,18 +27,39 @@
         </p>
       </div>
       <div class="mainSection">
-        <div class="mainSection__events">
-          <div class="addEvent">
+        <div class="mainSection__addEvents">
+          <div class="addEvent" @click="openAddEventDialog">
             <p class="addEvent__txt">+ Add Event</p>
           </div>
-          <EventComponent />
-          <EventComponent />
+          <div v-if="eventListOpen && userStore.events.length" class="mainSection__events">
+            <EventComponent
+              v-for="(event, index) in userStore.events"
+              :key="event.id || index"
+              :event="event"
+            />
+          </div>
+          <div v-if="!eventListOpen && twoEvents.length" class="mainSection__events">
+            <EventComponent
+              v-for="(event, index) in twoEvents"
+              :key="event.id || index"
+              :event="event"
+            />
+          </div>
+          <p
+            v-if="!eventListOpen && userStore.events.length > 2"
+            class="mainSection__allEvents"
+            @click="openAllEvents"
+          >
+            See all events
+          </p>
         </div>
         <div class="mainSection__other">
           <SearchPanel />
         </div>
       </div>
-      <AddEvent />
+      <div v-if="addEventDialogOpen" class="addEventDialog">
+        <AddEvent :addEventDialogOpen="addEventDialogOpen" @close-dialog="closeAddEventDialog" />
+      </div>
     </main>
   </div>
 </template>
