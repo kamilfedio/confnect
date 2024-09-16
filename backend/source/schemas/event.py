@@ -1,6 +1,7 @@
 from datetime import datetime
 from source.schemas.base import Base
 from source.schemas.feedback import FeedbackRead
+from source.utils.enums import EventStatus
 
 
 class Event(Base):
@@ -11,6 +12,7 @@ class Event(Base):
     name: str
     description: str
     place: str
+    status: EventStatus
     date: datetime | None
     optional_info: str | None
 
@@ -32,6 +34,7 @@ class EventUpdate(Base):
     description: str | None = None
     place: str | None = None
     date: datetime | None = None
+    status: EventStatus | None = None
     optional_info: str | None = None
 
 
@@ -42,6 +45,7 @@ class EventRead(Event):
 
     user_id: int
     id: int
+    status: EventStatus
     created_at: datetime
     updated_at: datetime | None
 

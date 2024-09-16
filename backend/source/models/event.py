@@ -1,9 +1,10 @@
 from sqlalchemy.orm import mapped_column, Mapped, relationship
-from sqlalchemy import Integer, String, ForeignKey, Text, DateTime, func
+from sqlalchemy import Integer, String, ForeignKey, Text, DateTime, func, Enum
 from datetime import datetime
 
 from source.models.base import Base
 from source.models.feedback import Feedback
+from source.utils.enums import EventStatus
 
 
 class Event(Base):
@@ -21,6 +22,9 @@ class Event(Base):
     description: Mapped[str] = mapped_column(Text, nullable=False)
     place: Mapped[str] = mapped_column(String(255), nullable=False)
     optional_info: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    status: Mapped[EventStatus] = mapped_column(
+        Enum(EventStatus), nullable=False, default=EventStatus.INCOMING
+    )
     date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=func.now()
