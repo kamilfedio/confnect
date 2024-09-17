@@ -9,7 +9,8 @@ class User(Base):
     """
 
     email: EmailStr
-    name: str
+    first_name: str
+    last_name: str
 
 
 class UserCreate(User):
