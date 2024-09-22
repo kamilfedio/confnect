@@ -63,5 +63,5 @@ async def root() -> Response:
     """
     return Response(
         status_code=status.HTTP_200_OK,
-        content=f"{Config.title} - {Config.version} is running",
+        content=f"{config.title} - {config.version} is running",
     )
