@@ -1,3 +1,8 @@
+from pydantic.dataclasses import dataclass
+from dataclasses import field
+
+
+@dataclass
 class Config:
     """
     app config
@@ -9,12 +14,17 @@ class Config:
     debug: bool = True
 
 
+@dataclass
 class ConfigMiddleware:
     """
     middleware config
     """
 
-    allow_origins: list[str] = ["*"]
+    allow_origins: list[str] = field(default_factory=lambda: ["*"])
     allow_credentials: bool = True
-    allow_methods: list[str] = ["*"]
-    allow_headers: list[str] = ["*"]
+    allow_methods: list[str] = field(default_factory=lambda: ["*"])
+    allow_headers: list[str] = field(default_factory=lambda: ["*"])
+
+
+config = Config()
+config_middleware = ConfigMiddleware()
