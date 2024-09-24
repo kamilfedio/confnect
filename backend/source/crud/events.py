@@ -26,17 +26,17 @@ async def get_all(
     return res.scalars().all()
 
 
-async def get_by_id(id: int, session: AsyncSession) -> Base | None:
+async def get_by_id(event_id: int, session: AsyncSession) -> Base | None:
     """
     get event by id
     Args:
-        id (int): event id
+        event_id (int): event id
         session (AsyncSession): current session
 
     Returns:
         Base | None: event or none
     """
-    query = select(Event).where(Event.id == id)
+    query = select(Event).where(Event.id == event_id)
     res = await session.execute(query)
 
     return res.scalars().one_or_none()
@@ -76,17 +76,17 @@ async def update(model: Base, session: AsyncSession) -> Base:
     return model
 
 
-async def delete(id: int, session: AsyncSession) -> None:
+async def delete(event_id: int, session: AsyncSession) -> None:
     """
     delete event by id
     Args:
-        id (int): event id
+        event_id (int): event id
         session (AsyncSession): current session
 
     Raises:
         HTTPException: if event doesn't exists
     """
-    query = select(Event).where(Event.id == id)
+    query = select(Event).where(Event.id == event_id)
     res = await session.execute(query)
     model = res.scalars().one_or_none()
 

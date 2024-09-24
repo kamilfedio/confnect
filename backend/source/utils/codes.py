@@ -10,7 +10,7 @@ from source.models.invitation_code import InvitationCode
 from source.config.secret import secret_config
 
 
-def generate_random_code() -> str:
+def _generate_random_code() -> str:
     """
         generate random 9 length code
     Returns:
@@ -81,7 +81,7 @@ async def create_codes(event_id: int, session: AsyncSession) -> str:
     Returns:
         str: generated code
     """
-    code: str = generate_random_code()
+    code: str = _generate_random_code()
     await _create_code(code, event_id, session)
 
     return code

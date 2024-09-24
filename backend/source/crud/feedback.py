@@ -44,29 +44,29 @@ async def get_all(
     return res.scalars().all()
 
 
-async def get_by_id(id: int, session: AsyncSession) -> Base | None:
+async def get_by_id(feedback_id: int, session: AsyncSession) -> Base | None:
     """
     get feedback by id
     Args:
-        id (int): feedback id
+        feedback_id (int): feedback id
         session (AsyncSession): current session
 
     Returns:
         Base | None: feedback or none
     """
-    query = select(Feedback).where(Feedback.id == id)
+    query = select(Feedback).where(Feedback.id == feedback_id)
     res = await session.execute(query)
     return res.scalars().one_or_none()
 
 
-async def delete_by_id(id: int, session: AsyncSession) -> None:
+async def delete_by_id(feedback_id: int, session: AsyncSession) -> None:
     """
     delete feedback from database
     Args:
-        id (int): feedback id
+        feedback_id (int): feedback id
         session (AsyncSession): current session
     """
-    query = select(Feedback).where(Feedback.id == id)
+    query = select(Feedback).where(Feedback.id == feedback_id)
     res = await session.execute(query)
     feedback = res.scalars().one_or_none()
     if feedback:
