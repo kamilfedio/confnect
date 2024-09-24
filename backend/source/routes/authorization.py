@@ -1,11 +1,13 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status, Response
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import exc
+from datetime import datetime
 
 from source.models.token import Token
 from source.database import get_async_session
 from source.schemas.user import UserRead, UserCreate
+from source.schemas.utils import EmailSchema, ResetPasswordRequest, ResetPassword
 from source.utils.authenticate import (
     get_password_hash,
     create_token,
@@ -13,9 +15,12 @@ from source.utils.authenticate import (
     verify_refresh_token,
     get_token,
 )
+from source.config.env_config import host_config
+from source.utils.emails import send_email
 from source.models.user import User
 import source.crud.user as user_crud
-from source.utils.enums import TokenType
+import source.crud.tokens as tokens_crud
+from source.utils.enums import EmailType, TokenType
 
 
 router = APIRouter()
@@ -133,3 +138,91 @@ async def refresh_token(
     )
 
     return {"access_token": access_token, "token_type": "bearer"}
+
+
+@router.post("/reset-password")
+async def reset_password(
+    password_request: ResetPasswordRequest,
+    background_tasks: BackgroundTasks,
+    session: AsyncSession = Depends(get_async_session),
+) -> Response:
+    """
+    send email with reset password link
+    Args:
+        password_request (ResetPasswordRequest): request password schema
+        background_tasks (BackgroundTasks): background tasks
+        session (AsyncSession, optional): db session. Defaults to Depends(get_async_session).
+
+    Returns:
+        Response: status code 200
+    """
+
+    user_by_email: User | None = await user_crud.get_by_email(
+        password_request.email, session
+    )
+    if user_by_email:
+        pass
+    reset_token: str = await create_token(
+        user_by_email.id, session=session, type=TokenType.RESET_PASSWORD
+    )
+    data_to_send: dict[str, str] = {
+        "user_name": user_by_email.first_name,
+        "reset_link": f"{host_config.BASE_URL}/change-password/{reset_token}",
+        "current_year": str(datetime.now()),
+    }
+    email_schema: EmailSchema = EmailSchema(
+        type=EmailType.RESET_PASSWORD,
+        to=password_request.email,
+        subject="Hi, Reset your password!",
+        content=data_to_send,
+    )
+    background_tasks.add_task(send_email, email_schema)
+
+    return Response(content="Password reset link sent", status_code=status.HTTP_200_OK)
+
+
+@router.post("/change-password")
+async def change_password_after_reset(
+    reset_password: ResetPassword, session: AsyncSession = Depends(get_async_session)
+) -> Response:
+    """
+    confirm password reset with changing it
+    Args:
+        reset_password (ResetPassword): reset password schema
+        session (AsyncSession, optional): db session.
+                Defaults to Depends(get_async_session).
+
+    Raises:
+        HTTPException: if token doesnt exists
+        HTTPException: if token is expirated
+        HTTPException: if passwords aren't the same
+
+    Returns:
+        Response: status code
+    """
+    token: Token | None = await get_token(
+        reset_password.reset_token, session=session, token_type=TokenType.RESET_PASSWORD
+    )
+    if not token:
+        raise HTTPException(
+            detail="Token is incorrect",
+            status_code=status.HTTP_400_BAD_REQUEST,
+        )
+    if token.expirated:
+        raise HTTPException(
+            detail="Token is expirated",
+            status_code=status.HTTP_400_BAD_REQUEST,
+        )
+    user: User = token.user
+    if not reset_password.new_password == reset_password.confirm_password:
+        raise HTTPException(
+            detail="Password't are incorrect",
+            status_code=status.HTTP_400_BAD_REQUEST,
+        )
+    hashed_pass = get_password_hash(reset_password.new_password)
+    user.hashed_password = hashed_pass
+
+    await user_crud.update(user, session=session)
+    await tokens_crud.disable_token(token.token, session=session)
+
+    return Response(status_code=status.HTTP_202_ACCEPTED, content="Password reseted")

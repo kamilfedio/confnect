@@ -91,12 +91,15 @@ async def create_token(
 
     match type:
         case TokenType.ACCESS:
-            expirates = secret_config.ACCESS_TOKEN_EXPIRE_MINUTES
+            expirates: int = secret_config.ACCESS_TOKEN_EXPIRE_MINUTES
             await _disable_old_access_token(user_id, session)
         case TokenType.REFRESH:
-            expirates = secret_config.REFRESH_TOKEN_EXPIRE_MINUTES
+            expirates: int = secret_config.REFRESH_TOKEN_EXPIRE_MINUTES
+        case TokenType.RESET_PASSWORD:
+            expirates: int = secret_config.RESET_PASSWORD_EXPIRE_MINUTES
         case _:
             raise ValueError("Invalid token type")
+
     expire = datetime.now() + timedelta(minutes=expirates)
     token_data = secrets.token_urlsafe(32)
     token = Token(token=token_data, user_id=user_id, type=type, expiration_date=expire)
