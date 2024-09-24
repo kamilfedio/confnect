@@ -28,4 +28,27 @@ class DatabaseConfig:
         return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
 
+@dataclass
+class EmailConfig:
+    """
+    Email config
+    """
+
+    EMAIL_PASSWORD: str = os.getenv("EMAIL_PASS")
+    EMAIL: str = os.getenv("EMAIL")
+    EMAIL_PORT: int = os.getenv("EMAIL_PORT")
+    EMAIL_SERVER: str = os.getenv("EMAIL_SERVER")
+
+
+@dataclass
+class HostConfig:
+    """
+    Base information about host
+    """
+
+    BASE_URL: str = "http://localhost:5173"
+
+
 db_config = DatabaseConfig()
+email_config = EmailConfig()
+host_config = HostConfig()

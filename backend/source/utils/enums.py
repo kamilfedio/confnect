@@ -8,6 +8,7 @@ class TokenType(Enum):
 
     ACCESS: str = "access"
     REFRESH: str = "refresh"
+    RESET_PASSWORD: str = "reset-password"
 
 
 class EventStatus(Enum):
@@ -18,3 +19,11 @@ class EventStatus(Enum):
     ENDED: str = "ended"
     PENDING: str = "pending"
     INCOMING: str = "incoming"
+
+
+class EmailType(Enum):
+    """
+    email types
+    """
+
+    RESET_PASSWORD: str = "reset_password"

@@ -71,7 +71,8 @@ async def disable_token(id: int, session: AsyncSession) -> None:
         session (AsyncSession): current session
     """
     query = select(Token).where(Token.token == id)
-    token: Token = await session.execute(query)
+    res = await session.execute(query)
+    token: Token = res.scalars().one_or_none()
     if token:
         token.expirated = True
         await session.commit()
