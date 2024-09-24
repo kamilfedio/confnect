@@ -17,13 +17,11 @@ from source.utils.authenticate import (
     get_token,
 )
 from source.config.env_config import host_config
-from source.utils.emails import send_email
 from source.models.user import User
 import source.crud.user as user_crud
 import source.crud.tokens as tokens_crud
 from source.utils.enums import EmailType, TokenType
-from backend.source.celery.celery_app import send_email_queue
-
+from source.celery.tasks import send_email_queue
 
 router = APIRouter()
 
