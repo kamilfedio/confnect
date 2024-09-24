@@ -49,6 +49,16 @@ class HostConfig:
     BASE_URL: str = "http://localhost:5173"
 
 
+@dataclass
+class RedisConfig:
+    """
+    redis config
+    """
+
+    REDIS_URL = os.getenv("REDIS_URL")
+
+
 db_config = DatabaseConfig()
 email_config = EmailConfig()
 host_config = HostConfig()
+redis_config = RedisConfig()

@@ -1,5 +1,5 @@
 from email.message import EmailMessage
-import smtplib
+import aiosmtplib
 from jinja2 import Environment, FileSystemLoader, Template
 
 from source.schemas.utils import EmailSchema
@@ -24,12 +24,13 @@ def _render_template(template_name: str, context: dict[str, str]) -> str:
     return template.render(context)
 
 
-def send_email(email_schema: EmailSchema) -> None:
+async def send_email(email_schema_dict: dict) -> None:
     """
     send email to user
     Args:
         email_schema (EmailSchema): email schema data
     """
+    email_schema = EmailSchema(**email_schema_dict)
     match email_schema.type:
         case EmailType.RESET_PASSWORD:
             content: str = _render_template("reset_password.html", email_schema.content)
@@ -41,10 +42,9 @@ def send_email(email_schema: EmailSchema) -> None:
     email["to"] = email_schema.to
     email["subject"] = email_schema.subject
     email.set_content(content, subtype="html")
-    with smtplib.SMTP(
-        host=email_config.EMAIL_SERVER, port=email_config.EMAIL_PORT
+
+    async with aiosmtplib.SMTP(
+        hostname=email_config.EMAIL_SERVER, port=int(email_config.EMAIL_PORT)
     ) as smtp:
-        smtp.ehlo()
-        smtp.starttls()
-        smtp.login(user=email_config.EMAIL, password=email_config.EMAIL_PASSWORD)
-        smtp.send_message(email)
+        await smtp.login(email_config.EMAIL, email_config.EMAIL_PASSWORD)
+        await smtp.send_message(email)

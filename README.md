@@ -49,3 +49,8 @@ quizes, polls or other our features!
 `docker-compose up`
 link: `http://0.0.0.0:8000/`
 docs: `http://0.0.0.0:8000/docs`
+
+## dev run
+`redis-server`
+`poetry run celery -A source.celery worker --loglevel=info`
+`poetry run source.main:app --reload`
