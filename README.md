@@ -1,4 +1,9 @@
 # confnect
+STACK:
+- vue.js
+- FastAPI
+- Postgresql
+- Docker
 
 ## Description
 App dedicated to conferences, admins, managers etc. Usually at big events are sections where users can ask.
@@ -10,16 +15,17 @@ quizes, polls or other our features!
 
 ## Versions
 ### 0.0.1 - beta
-- register via google
+- register/login
 - create events
 - generate invitation codes
 - ask live questions
 - send feedback
+- send forms on launch page
 
 ### 0.0.2
-- view questions after meet
-- reply to questions after meet
-- notifications about new replies for attendances
+- view questions after meet (optional)
+- reply to questions after meet (optional)
+- notifications about new replies for attendances (optional)
 
 ### 0.0.3
 - create votes
@@ -28,6 +34,7 @@ quizes, polls or other our features!
 ### 0.1.0
 - send reviews
 - check admins profiles
+- set events to mode: private | public
 
 ### 0.1.1
 - create polls
