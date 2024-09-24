@@ -1,3 +1,4 @@
+import json
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status, Response
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -21,6 +22,7 @@ from source.models.user import User
 import source.crud.user as user_crud
 import source.crud.tokens as tokens_crud
 from source.utils.enums import EmailType, TokenType
+from source.celery import send_email_queue
 
 
 router = APIRouter()
@@ -143,7 +145,6 @@ async def refresh_token(
 @router.post("/reset-password")
 async def reset_password(
     password_request: ResetPasswordRequest,
-    background_tasks: BackgroundTasks,
     session: AsyncSession = Depends(get_async_session),
 ) -> Response:
     """
@@ -176,7 +177,9 @@ async def reset_password(
         subject="Hi, Reset your password!",
         content=data_to_send,
     )
-    background_tasks.add_task(send_email, email_schema)
+    email_schema_dict: dict = email_schema.model_dump()
+    email_schema_dict['type'] = email_schema_dict["type"].value
+    send_email_queue.delay(json.dumps(email_schema_dict))
 
     return Response(content="Password reset link sent", status_code=status.HTTP_200_OK)
 
