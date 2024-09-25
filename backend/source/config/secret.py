@@ -1,18 +1,11 @@
-import os
-from dotenv import load_dotenv
-from pydantic.dataclasses import dataclass
+from source.config.base import BaseConfig
 
-env_path = os.path.join(os.path.dirname(__file__), "../../.env")
-load_dotenv(dotenv_path=env_path)
-
-
-@dataclass
-class SecretConfig:
+class SecretConfig(BaseConfig):
     """
     secret app config
     """
 
-    SECRET_KEY: str = os.getenv("SECRET_KEY")
+    SECRET_KEY: str
     ALGORITHM: str = "bcrypt"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     REFRESH_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7

@@ -1,8 +1,7 @@
-from pydantic.dataclasses import dataclass
+from source.config.base import BaseConfig
 
 
-@dataclass
-class RoutesConfig:
+class RoutesConfig(BaseConfig):
     """
     routes config
     """

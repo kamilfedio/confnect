@@ -1,9 +1,7 @@
-from pydantic.dataclasses import dataclass
-from dataclasses import field
+from source.config.base import BaseConfig
 
 
-@dataclass
-class Config:
+class Config(BaseConfig):
     """
     app config
     """
@@ -14,16 +12,15 @@ class Config:
     debug: bool = True
 
 
-@dataclass
-class ConfigMiddleware:
+class ConfigMiddleware(BaseConfig):
     """
     middleware config
     """
 
-    allow_origins: list[str] = field(default_factory=lambda: ["*"])
+    allow_origins: list[str] = ["*"]
     allow_credentials: bool = True
-    allow_methods: list[str] = field(default_factory=lambda: ["*"])
-    allow_headers: list[str] = field(default_factory=lambda: ["*"])
+    allow_methods: list[str] = ["*"]
+    allow_headers: list[str] = ["*"]
 
 
 config = Config()

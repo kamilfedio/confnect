@@ -1,8 +1,6 @@
 from asgiref.sync import async_to_sync
 import json
 
-from source.database import get_async_session
-from source.crud.tokens import delete_expirated
 from source.utils.emails import send_email
 from source.celery.celery_app import celery
 
