@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import select
+from sqlalchemy import delete, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from source.schemas.base import Base
 from source.models.token import Token
@@ -76,7 +76,3 @@ async def disable_token(token_id: int, session: AsyncSession) -> None:
     if token:
         token.expirated = True
         await session.commit()
-
-
-async def delete(token_id: int, session: AsyncSession) -> None:
-    pass
