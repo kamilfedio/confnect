@@ -6,17 +6,17 @@ from source.models.base import Base as BaseModel
 from source.models.user import User
 
 
-async def get_by_id(id: int, session: AsyncSession) -> Base | None:
+async def get_by_id(user_id: int, session: AsyncSession) -> Base | None:
     """
         get user by id
     Args:
-        id (int): user id
+        user_id (int): user id
         session (AsyncSession): current session
 
     Returns:
         Base | None: user or none
     """
-    query = select(User).where(User.id == id)
+    query = select(User).where(User.id == user_id)
     res = await session.execute(query)
 
     return res.scalars().one_or_none()

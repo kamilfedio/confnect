@@ -52,5 +52,6 @@ docs: `http://0.0.0.0:8000/docs`
 
 ## dev run
 `redis-server`
-`poetry run celery -A source.celery worker --loglevel=info`
-`poetry run source.main:app --reload`
+`poetry run celery -A source.celery.celery_app worker --loglevel=info`
+`poetry run celery -A source.celery.celery_app beat --loglevel=info`
+`poetry run uvicorn source.main:app --reload`

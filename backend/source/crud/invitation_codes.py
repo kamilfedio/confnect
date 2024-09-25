@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import select
+from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from source.schemas.base import Base
 from source.models.invitation_code import InvitationCode
@@ -22,17 +22,17 @@ async def create(model: Base, session: AsyncSession) -> Base:
     return model
 
 
-async def get_by_id(id: int, session: AsyncSession) -> Base | None:
+async def get_by_id(code_id: int, session: AsyncSession) -> Base | None:
     """
     get code by id
     Args:
-        id (int): code id
+        code_id (int): code id
         session (AsyncSession): current session
 
     Returns:
         Base | None: code or none
     """
-    query = select(InvitationCode).where(InvitationCode.id == id)
+    query = select(InvitationCode).where(InvitationCode.id == code_id)
     res = await session.execute(query)
     return res.scalars().one_or_none()
 

@@ -1,5 +1,5 @@
 import json
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, status, Response
+from fastapi import APIRouter, Depends, HTTPException, status, Response
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import exc
@@ -17,13 +17,11 @@ from source.utils.authenticate import (
     get_token,
 )
 from source.config.env_config import host_config
-from source.utils.emails import send_email
 from source.models.user import User
 import source.crud.user as user_crud
 import source.crud.tokens as tokens_crud
 from source.utils.enums import EmailType, TokenType
-from source.celery import send_email_queue
-
+from source.celery.tasks import send_email_queue
 
 router = APIRouter()
 
@@ -178,7 +176,7 @@ async def reset_password(
         content=data_to_send,
     )
     email_schema_dict: dict = email_schema.model_dump()
-    email_schema_dict['type'] = email_schema_dict["type"].value
+    email_schema_dict["type"] = email_schema_dict["type"].value
     send_email_queue.delay(json.dumps(email_schema_dict))
 
     return Response(content="Password reset link sent", status_code=status.HTTP_200_OK)

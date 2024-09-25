@@ -22,17 +22,17 @@ async def get_all(pagination: tuple[int, int], session: AsyncSession) -> Sequenc
     return res.scalars().all()
 
 
-async def get_by_id(id: int, session: AsyncSession) -> Base | None:
+async def get_by_id(form_id: int, session: AsyncSession) -> Base | None:
     """
     get form by id
     Args:
-        id (int): form id
+        form_id (int): form id
         session (AsyncSession): current session
 
     Returns:
         Base | None: form or none
     """
-    query = select(Form).where(Form.id == id)
+    query = select(Form).where(Form.id == form_id)
     res = await session.execute(query)
 
     return res.scalars().one_or_none()
@@ -56,14 +56,14 @@ async def create(model: Base, session: AsyncSession) -> Base:
     return new_model
 
 
-async def delete(id: int, session: AsyncSession) -> None:
+async def delete(form_id: int, session: AsyncSession) -> None:
     """
     delete form from database
     Args:
-        id (int): form id
+        form_id (int): form id
         session (AsyncSession): current session
     """
-    query = delete(Form).where(Form.id == id)
+    query = delete(Form).where(Form.id == form_id)
     await session.execute(query)
     await session.commit()
 

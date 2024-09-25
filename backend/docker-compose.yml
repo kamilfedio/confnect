@@ -37,7 +37,18 @@ services:
   celery:
     build: .
     container_name: celery
-    command: ["celery", "-A", "source.celery:celery", "worker"]
+    command: ["celery", "-A", "source.celery.celery_app:celery", "worker"]
+    depends_on:
+      - redis
+      - backend
+    volumes:
+      - .:/app
+    user: celeryuser
+
+  celery_beat:
+    build: .
+    container_name: celery_beat
+    command: ["celery", "-A", "source.celery.celery_app:celery", "beat"]
     depends_on:
       - redis
       - backend

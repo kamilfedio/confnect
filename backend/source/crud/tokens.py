@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import select
+from sqlalchemy import delete, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from source.schemas.base import Base
 from source.models.token import Token
@@ -24,7 +24,7 @@ async def create(model: Base, session: AsyncSession) -> Base:
 
 
 async def get_by_id(
-    id: str, token_type: TokenType, session: AsyncSession
+    token_id: str, token_type: TokenType, session: AsyncSession
 ) -> Base | None:
     """
     get token by id and type
@@ -37,7 +37,7 @@ async def get_by_id(
         Base | None: token or none
     """
     query = select(Token).where(
-        Token.token == id,
+        Token.token == token_id,
         Token.type == token_type,
         Token.expiration_date > datetime.now(),
     )
@@ -63,14 +63,14 @@ async def get_user_tokens_by_id(
     return res.scalars().all()
 
 
-async def disable_token(id: int, session: AsyncSession) -> None:
+async def disable_token(token_id: int, session: AsyncSession) -> None:
     """
     set token expirated on True
     Args:
-        id (int): token id
+        token_id (int): token id
         session (AsyncSession): current session
     """
-    query = select(Token).where(Token.token == id)
+    query = select(Token).where(Token.token == token_id)
     res = await session.execute(query)
     token: Token = res.scalars().one_or_none()
     if token:
