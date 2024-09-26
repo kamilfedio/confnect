@@ -5,7 +5,7 @@ from datetime import datetime
 from source.models.base import Base
 
 
-class Questions(Base):
+class Question(Base):
     """
     question database schema
     """
