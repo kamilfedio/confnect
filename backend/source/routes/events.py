@@ -14,6 +14,7 @@ from fastapi.websockets import WebSocketState
 from sqlalchemy import Sequence
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from source.schemas.question import QuestionRead
 from source.utils.connection_manager import (
     check_event_code,
     check_if_event_is_ongoing,
@@ -29,6 +30,7 @@ from source.schemas.event import EventRead, EventUpdate, EventCreate, EventChang
 from source.dependencies.depends import pagination, get_current_user
 import source.crud.events as event_crud
 import source.crud.invitation_codes as codes_crud
+import source.crud.questions as questions_crud
 import source.crud.feedback as feedback_crud
 from source.models.event import Event
 from source.utils.codes import create_codes, create_qr_code
@@ -363,6 +365,22 @@ async def update_event_status(
     return await event_crud.update(event, session)
 
 
+@router.get("/{event_id}/questions", response_model=list[QuestionRead])
+async def get_event_question(
+    event_id: int, session: AsyncSession = Depends(get_async_session)
+) -> Sequence[QuestionRead]:
+    """
+    get event questions
+    Args:
+        event_id (int): event id
+        session (AsyncSession, optional): current session. Defaults to Depends(get_async_session).
+
+    Returns:
+        QuestionRead: question data object
+    """
+    return await questions_crud.get_by_event(event_id, session)
+
+
 @router.websocket("/{event_id}/questions")
 async def websocket_endpoint(
     websocket: WebSocket,
@@ -387,8 +405,10 @@ async def websocket_endpoint(
     await websocket.accept()
     try:
         while True:
-            receive_task = asyncio.create_task(receive_message(websocket, event_id))
-            send_task = asyncio.create_task(send_message(websocket, event_id))
+            receive_task = asyncio.create_task(
+                receive_message(websocket, event_id)
+            )
+            send_task = asyncio.create_task(send_message(websocket, event_id, session))
             done, pending = await asyncio.wait(
                 {receive_task, send_task},
                 return_when=asyncio.FIRST_COMPLETED,

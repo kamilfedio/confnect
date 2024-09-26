@@ -5,4 +5,4 @@ from source.models.token import Token
 from source.models.event import Event
 from source.models.invitation_code import InvitationCode
 from source.models.feedback import Feedback
-from source.models.questions import Questions
+from source.models.questions import Question
