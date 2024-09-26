@@ -24,6 +24,12 @@ class EventCreate(Event):
 
     pass
 
+class EventChangeStatus(Base):
+    """
+    change event status object
+    """
+
+    status: EventStatus
 
 class EventUpdate(Base):
     """

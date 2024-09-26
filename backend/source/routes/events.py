@@ -16,6 +16,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from source.utils.connection_manager import (
     check_event_code,
+    check_if_event_is_ongoing,
     receive_message,
     send_message,
 )
@@ -24,7 +25,7 @@ from source.schemas.feedback import FeedbackRead, FeedbackCreate
 from source.database import get_async_session
 from source.models.user import User
 from source.models.invitation_code import InvitationCode
-from source.schemas.event import EventRead, EventUpdate, EventCreate
+from source.schemas.event import EventRead, EventUpdate, EventCreate, EventChangeStatus
 from source.dependencies.depends import pagination, get_current_user
 import source.crud.events as event_crud
 import source.crud.invitation_codes as codes_crud
@@ -333,6 +334,35 @@ async def delete_feedback_by_id(
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
+@router.patch("/{event_id}/status", response_model=EventRead)
+async def update_event_status(
+    event_id: int,
+    event_status: EventChangeStatus,
+    user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_async_session),
+) -> EventRead:
+    """
+    change status of the event
+    Args:
+        event_id (int): event id
+        event_status (EventChangeStatus): event new status
+        user (User, optional): current user. Defaults to Depends(get_current_user).
+        session (AsyncSession, optional): current session. Defaults to Depends(get_async_session).
+
+    Returns:
+        EventRead: _description_
+    """
+    new_event = event_status.model_dump()
+    event: Event | None = await event_crud.get_by_id(event_id, session)
+    if not event:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Event not found"
+        )
+    event.status = new_event["status"]
+
+    return await event_crud.update(event, session)
+
+
 @router.websocket("/{event_id}/questions")
 async def websocket_endpoint(
     websocket: WebSocket,
@@ -348,6 +378,9 @@ async def websocket_endpoint(
     """
     code: str = websocket.query_params.get("code")
     if not await check_event_code(code=code, event_id=event_id, session=session):
+        await websocket.close(code=1008)
+        return
+    if not await check_if_event_is_ongoing(event_id=event_id, session=session):
         await websocket.close(code=1008)
         return
 
