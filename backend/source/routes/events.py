@@ -1,9 +1,24 @@
+import asyncio
 import io
-from fastapi import APIRouter, Depends, HTTPException, status, Response
+from fastapi import (
+    APIRouter,
+    Depends,
+    HTTPException,
+    WebSocket,
+    WebSocketDisconnect,
+    status,
+    Response,
+)
 from fastapi.responses import StreamingResponse
+from fastapi.websockets import WebSocketState
 from sqlalchemy import Sequence
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from source.utils.connection_manager import (
+    check_event_code,
+    receive_message,
+    send_message,
+)
 from source.models.feedback import Feedback
 from source.schemas.feedback import FeedbackRead, FeedbackCreate
 from source.database import get_async_session
@@ -316,3 +331,48 @@ async def delete_feedback_by_id(
     """
     await feedback_crud.delete_by_id(id, session)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@router.websocket("/{event_id}/questions")
+async def websocket_endpoint(
+    websocket: WebSocket,
+    event_id: int,
+    session=Depends(get_async_session),
+):
+    """
+    websocket endpoint to manage live questions
+    Args:
+        websocket (WebSocket): websocket connection
+        event_id (int): event id
+        session (_type_, optional): current session. Defaults to Depends(get_async_session).
+    """
+    code: str = websocket.query_params.get("code")
+    if not await check_event_code(code=code, event_id=event_id, session=session):
+        await websocket.close(code=1008)
+        return
+
+    await websocket.accept()
+    try:
+        while True:
+            receive_task = asyncio.create_task(receive_message(websocket, event_id))
+            send_task = asyncio.create_task(send_message(websocket, event_id))
+            done, pending = await asyncio.wait(
+                {receive_task, send_task},
+                return_when=asyncio.FIRST_COMPLETED,
+            )
+            for task in pending:
+                task.cancel()
+
+            for task in done:
+                try:
+                    task.result()
+                except WebSocketDisconnect:
+                    for task in pending:
+                        task.cancel()
+                    return
+
+    except WebSocketDisconnect:
+        pass
+    finally:
+        if websocket.client_state == WebSocketState.CONNECTED:
+            await websocket.close()

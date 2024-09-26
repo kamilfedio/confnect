@@ -11,6 +11,8 @@ from source.routes.test import router as test_router
 from source.routes.users import router as users_router
 from source.routes.events import router as events_router
 
+from source.utils.connection_manager import broadcast
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -19,7 +21,9 @@ async def lifespan(app: FastAPI):
     Args:
         app (FastAPI): FastAPI
     """
+    await broadcast.connect()
     yield
+    await broadcast.disconnect()
 
 
 app = FastAPI(
@@ -50,7 +54,7 @@ for route in routes:
         route[0], prefix=f"{routes_config.version}/{route[1]}", tags=[route[1]]
     )
 
-# auth router without prefix
+# add other routers
 app.include_router(auth_router, tags=[routes_config.auth])
 
 
