@@ -1,18 +1,37 @@
+import asyncio
 import io
-from fastapi import APIRouter, Depends, HTTPException, status, Response
+from fastapi import (
+    APIRouter,
+    Depends,
+    HTTPException,
+    WebSocket,
+    WebSocketDisconnect,
+    status,
+    Response,
+)
 from fastapi.responses import StreamingResponse
+from fastapi.websockets import WebSocketState
 from sqlalchemy import Sequence
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from source.models.questions import Question
+from source.schemas.question import QuestionRead
+from source.utils.connection_manager import (
+    check_event_code,
+    check_if_event_is_ongoing,
+    receive_message,
+    send_message,
+)
 from source.models.feedback import Feedback
 from source.schemas.feedback import FeedbackRead, FeedbackCreate
 from source.database import get_async_session
 from source.models.user import User
 from source.models.invitation_code import InvitationCode
-from source.schemas.event import EventRead, EventUpdate, EventCreate
+from source.schemas.event import EventRead, EventUpdate, EventCreate, EventChangeStatus
 from source.dependencies.depends import pagination, get_current_user
 import source.crud.events as event_crud
 import source.crud.invitation_codes as codes_crud
+import source.crud.questions as questions_crud
 import source.crud.feedback as feedback_crud
 from source.models.event import Event
 from source.utils.codes import create_codes, create_qr_code
@@ -316,3 +335,134 @@ async def delete_feedback_by_id(
     """
     await feedback_crud.delete_by_id(id, session)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+@router.patch("/{event_id}/status", response_model=EventRead)
+async def update_event_status(
+    event_id: int,
+    event_status: EventChangeStatus,
+    user: User = Depends(get_current_user),
+    session: AsyncSession = Depends(get_async_session),
+) -> EventRead:
+    """
+    change status of the event
+    Args:
+        event_id (int): event id
+        event_status (EventChangeStatus): event new status
+        user (User, optional): current user. Defaults to Depends(get_current_user).
+        session (AsyncSession, optional): current session. Defaults to Depends(get_async_session).
+
+    Returns:
+        EventRead: _description_
+    """
+    new_event = event_status.model_dump()
+    event: Event | None = await event_crud.get_by_id(event_id, session)
+    if not event:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Event not found"
+        )
+    event.status = new_event["status"]
+
+    return await event_crud.update(event, session)
+
+
+@router.get("/{event_id}/questions", response_model=list[QuestionRead])
+async def get_event_question(
+    event_id: int, session: AsyncSession = Depends(get_async_session)
+) -> Sequence[QuestionRead]:
+    """
+    get event questions
+    Args:
+        event_id (int): event id
+        session (AsyncSession, optional): current session. Defaults to Depends(get_async_session).
+
+    Returns:
+        QuestionRead: question data object
+    """
+    return await questions_crud.get_by_event(event_id, session)
+
+
+@router.get("/questions/{question_id}", response_model=QuestionRead)
+async def get_question_by_id(
+    question_id: int, session: AsyncSession = Depends(get_async_session)
+) -> QuestionRead:
+    """
+    get question by id
+    Args:
+        question_id (int): question id
+        session (AsyncSession, optional): current session. Defaults to Depends(get_async_session).
+
+    Returns:
+        QuestionRead: question data object
+    """
+    question: Question = await questions_crud.get_by_id(question_id, session)
+    if not question:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Question not found"
+        )
+
+    return question
+
+@router.delete('/questions/{question_id}')
+async def delete_question_by_id(question_id: int, user: User = Depends(get_current_user),
+                                session: AsyncSession = Depends(get_async_session)) -> Response:
+    """
+    delete question by id
+    Args:
+        question_id (int): question id
+        user (User, optional): current user. Defaults to Depends(get_current_user).
+        session (AsyncSession, optional): current session. Defaults to Depends(get_async_session).
+
+    Returns:
+        Response: status code
+    """
+    await questions_crud.delete(question_id, session)
+
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+@router.websocket("/{event_id}/questions")
+async def websocket_endpoint(
+    websocket: WebSocket,
+    event_id: int,
+    session=Depends(get_async_session),
+):
+    """
+    websocket endpoint to manage live questions
+    Args:
+        websocket (WebSocket): websocket connection
+        event_id (int): event id
+        session (_type_, optional): current session. Defaults to Depends(get_async_session).
+    """
+    code: str = websocket.query_params.get("code")
+    if not await check_event_code(code=code, event_id=event_id, session=session):
+        await websocket.close(code=1008)
+        return
+    if not await check_if_event_is_ongoing(event_id=event_id, session=session):
+        await websocket.close(code=1008)
+        return
+
+    await websocket.accept()
+    try:
+        while True:
+            receive_task = asyncio.create_task(receive_message(websocket, event_id))
+            send_task = asyncio.create_task(send_message(websocket, event_id, session))
+            done, pending = await asyncio.wait(
+                {receive_task, send_task},
+                return_when=asyncio.FIRST_COMPLETED,
+            )
+            for task in pending:
+                task.cancel()
+
+            for task in done:
+                try:
+                    task.result()
+                except WebSocketDisconnect:
+                    for task in pending:
+                        task.cancel()
+                    return
+
+    except WebSocketDisconnect:
+        pass
+    finally:
+        if websocket.client_state == WebSocketState.CONNECTED:
+            await websocket.close()

@@ -17,7 +17,7 @@ class EventStatus(Enum):
     """
 
     ENDED: str = "ended"
-    PENDING: str = "pending"
+    ONGOING: str = "ongoing"
     INCOMING: str = "incoming"
 
 

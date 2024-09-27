@@ -1,4 +1,6 @@
 from datetime import datetime
+
+from pydantic import Field
 from source.schemas.base import Base
 from source.schemas.feedback import FeedbackRead
 from source.utils.enums import EventStatus
@@ -25,6 +27,12 @@ class EventCreate(Event):
 
     pass
 
+class EventChangeStatus(Base):
+    """
+    change event status object
+    """
+
+    status: EventStatus
 
 class EventUpdate(Base):
     """
