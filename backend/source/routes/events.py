@@ -14,6 +14,7 @@ from fastapi.websockets import WebSocketState
 from sqlalchemy import Sequence
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from source.models.questions import Question
 from source.schemas.question import QuestionRead
 from source.utils.connection_manager import (
     check_event_code,
@@ -381,6 +382,44 @@ async def get_event_question(
     return await questions_crud.get_by_event(event_id, session)
 
 
+@router.get("/questions/{question_id}", response_model=QuestionRead)
+async def get_question_by_id(
+    question_id: int, session: AsyncSession = Depends(get_async_session)
+) -> QuestionRead:
+    """
+    get question by id
+    Args:
+        question_id (int): question id
+        session (AsyncSession, optional): current session. Defaults to Depends(get_async_session).
+
+    Returns:
+        QuestionRead: question data object
+    """
+    question: Question = await questions_crud.get_by_id(question_id, session)
+    if not question:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Question not found"
+        )
+
+    return question
+
+@router.delete('/questions/{question_id}')
+async def delete_question_by_id(question_id: int, user: User = Depends(get_current_user),
+                                session: AsyncSession = Depends(get_async_session)) -> Response:
+    """
+    delete question by id
+    Args:
+        question_id (int): question id
+        user (User, optional): current user. Defaults to Depends(get_current_user).
+        session (AsyncSession, optional): current session. Defaults to Depends(get_async_session).
+
+    Returns:
+        Response: status code
+    """
+    await questions_crud.delete(question_id, session)
+
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
 @router.websocket("/{event_id}/questions")
 async def websocket_endpoint(
     websocket: WebSocket,
@@ -405,9 +444,7 @@ async def websocket_endpoint(
     await websocket.accept()
     try:
         while True:
-            receive_task = asyncio.create_task(
-                receive_message(websocket, event_id)
-            )
+            receive_task = asyncio.create_task(receive_message(websocket, event_id))
             send_task = asyncio.create_task(send_message(websocket, event_id, session))
             done, pending = await asyncio.wait(
                 {receive_task, send_task},
