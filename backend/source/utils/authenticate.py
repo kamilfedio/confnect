@@ -121,9 +121,7 @@ async def get_token(
     Returns:
         Token | None: token data or None
     """
-    return await tokens_crud.get_by_id(
-        token_id=token, session=session, token_type=token_type
-    )
+    return await tokens_crud.get_by_id(token_id=token, session=session, token_type=token_type)
 
 
 async def verify_refresh_token(token: str, session: AsyncSession) -> bool:

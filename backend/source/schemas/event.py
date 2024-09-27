@@ -4,6 +4,7 @@ from pydantic import Field
 from source.schemas.base import Base
 from source.schemas.feedback import FeedbackRead
 from source.utils.enums import EventStatus
+from pydantic import Field
 
 
 class Event(Base):
