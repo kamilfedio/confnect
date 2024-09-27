@@ -46,5 +46,5 @@ async def send_email(email_schema_dict: dict) -> None:
     async with aiosmtplib.SMTP(
         hostname=email_config.EMAIL_SERVER, port=int(email_config.EMAIL_PORT)
     ) as smtp:
-        await smtp.login(email_config.EMAIL, email_config.EMAIL_PASSWORD)
+        await smtp.login(email_config.EMAIL, email_config.EMAIL_PASS)
         await smtp.send_message(email)
