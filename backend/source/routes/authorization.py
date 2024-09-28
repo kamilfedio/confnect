@@ -152,7 +152,7 @@ async def logout(refresh_token: str, session=Depends(get_async_session)) -> Resp
         Response: status code
     """
 
-    check_token: Token = await tokens_crud.get_by_id(
+    check_token: Token | None = await tokens_crud.get_by_id(
         refresh_token, TokenType.REFRESH, session
     )
     if not check_token:
@@ -188,8 +188,9 @@ async def reset_password(
     user_by_email: User | None = await user_crud.get_by_email(
         password_request.email, session
     )
-    if user_by_email:
-        pass
+    if not user_by_email:
+        return
+    
     reset_token: str = await create_token(
         user_by_email.id, session=session, type=TokenType.RESET_PASSWORD
     )
