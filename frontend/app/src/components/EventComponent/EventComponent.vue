@@ -4,8 +4,10 @@
     <div class="event__data">
       <div class="event__informations">
         <div class="event__number">#{{ event.id }}</div>
-        <p class="event__status">Status: <span class="event__statusDate">closed</span></p>
-        <p class="event__date">{{ event.date }}</p>
+        <p class="event__status">
+          Status: <span class="event__statusDate">{{ event.status }}</span>
+        </p>
+        <p class="event__date">{{ formattedDate() }}</p>
         <p class="event__place">{{ event.place }}</p>
         <p class="event__location">Office meeting</p>
       </div>

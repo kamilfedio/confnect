@@ -20,7 +20,8 @@ export default defineComponent({
 
     onMounted(async () => {
       await userStore.fetchUserEvents()
-      console.log(userStore.events)
+      await userStore.fetchUser()
+      console.log(userStore.user)
       if (userStore.events) {
         console.log(userStore.events.length)
         const max = userStore.events.length < 2 ? userStore.events.length : 2

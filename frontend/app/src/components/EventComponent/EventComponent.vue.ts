@@ -9,8 +9,13 @@ export default defineComponent({
       required: true
     }
   },
-  setup() {
+  setup(props) {
+    const formattedDate = () => {
+      return props.event.date ? props.event.date.replace('T', ' ') : ''
+    }
     // Zwracamy zmienne i funkcje, które będą używane w szablonie
-    return {}
+    return {
+      formattedDate
+    }
   }
 })

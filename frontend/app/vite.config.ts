@@ -19,5 +19,14 @@ export default defineConfig({
         additionalData: `@import "@/scss/_variables.scss";`
       }
     }
+  },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    }
   }
 })

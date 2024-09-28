@@ -5,13 +5,13 @@
         <img src="../../img/transparentBgc_logo.png" alt="brandLogo" class="topPanel__logo" />
         <div class="topPanel__profile profile">
           <div class="profile__name">
-            <p class="profile__firstName">Jan</p>
-            <p class="profile__surName">Krupa</p>
+            <p class="profile__firstName">{{ userStore.user.first_name }}</p>
+            <p class="profile__surName">{{ userStore.user.last_name }}</p>
           </div>
           <div class="profile__img"></div>
         </div>
       </div>
-      <p class="welcome">Nice to see you Jan</p>
+      <p class="welcome">Nice to see you {{ userStore.user.first_name }}</p>
     </header>
     <main>
       <div class="section">

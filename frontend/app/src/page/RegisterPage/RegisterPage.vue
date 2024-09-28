@@ -19,8 +19,13 @@
             class="registerForm__input"
             placeholder="name"
             v-model="name"
-            pattern="[A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]+ [A-Za-zĄĆĘŁŃÓŚŹŻąćęłńóśźż]+"
-            title="Full name must consist of two words (first and last name), separated by a space."
+            required
+          />
+          <input
+            type="text"
+            class="registerForm__input"
+            placeholder="surname"
+            v-model="surname"
             required
           />
           <input
@@ -28,7 +33,7 @@
             class="registerForm__input"
             placeholder="password"
             v-model="password"
-            pattern="(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{7,}"
+            pattern="(?=.*[A-Z])(?=.*\d)[A-Za-z\d\W_]{7,}"
             title="Password must be at least 7 characters long, contain one uppercase letter and one digit."
             required
           />

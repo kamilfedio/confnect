@@ -11,6 +11,7 @@ export default defineComponent({
     // Reaktywne zmienne
     const email = ref<string>('')
     const name = ref<string>('')
+    const surname = ref<string>('')
     const password = ref<string>('')
     const acceptRules = ref<boolean>(false)
 
@@ -34,7 +35,8 @@ export default defineComponent({
         },
         body: JSON.stringify({
           email: email.value,
-          name: name.value,
+          first_name: name.value,
+          last_name: surname.value,
           password: password.value
         })
       })
@@ -77,6 +79,7 @@ export default defineComponent({
     return {
       email,
       name,
+      surname,
       password,
       acceptRules,
       emailError,
