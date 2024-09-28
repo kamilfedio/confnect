@@ -21,9 +21,7 @@ export default defineComponent({
     onMounted(async () => {
       await userStore.fetchUserEvents()
       await userStore.fetchUser()
-      console.log(userStore.user)
       if (userStore.events) {
-        console.log(userStore.events.length)
         const max = userStore.events.length < 2 ? userStore.events.length : 2
         for (let i = 0; i < max; i++) {
           twoEvents.value.push(userStore.events[i])
@@ -37,7 +35,6 @@ export default defineComponent({
 
     const openAddEventDialog = () => {
       addEventDialogOpen.value = true
-      console.log(addEventDialogOpen.value)
     }
 
     const closeAddEventDialog = () => {

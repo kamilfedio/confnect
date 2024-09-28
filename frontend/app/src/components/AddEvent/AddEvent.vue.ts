@@ -66,6 +66,7 @@ export default defineComponent({
         })
         .then((data) => {
           console.log('Success:', data)
+          userStore.fetchUserEvents()
         })
         .catch((error) => {
           console.error('Error:', error.message)
