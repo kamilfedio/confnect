@@ -140,6 +140,35 @@ async def refresh_token(
     return {"access_token": access_token, "token_type": "bearer"}
 
 
+@router.post("/logout")
+async def logout(refresh_token: str, session=Depends(get_async_session)) -> Response:
+    """
+    logout user by disabling refresh token
+    Args:
+        refresh_token (str): refresh token
+        session (_type_, optional): current session. Defaults to Depends(get_async_session).
+
+    Returns:
+        Response: status code
+    """
+
+    check_token: Token = await tokens_crud.get_by_id(
+        refresh_token, TokenType.REFRESH, session
+    )
+    if not check_token:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Token doesn't exists",
+        )
+    if check_token.expirated:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Token expirated"
+        )
+    await tokens_crud.disable_token(refresh_token, session)
+
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
 @router.post("/reset-password")
 async def reset_password(
     password_request: ResetPasswordRequest,
