@@ -1,5 +1,5 @@
 import { defineComponent, onMounted, ref, watchEffect } from 'vue'
-import { useUserStore } from '@/stores/userStore'
+import { useUserStore, type UserEvent } from '@/stores/userStore'
 import EventComponent from '@/components/EventComponent/EventComponent.vue'
 import SearchPanel from '@/components/SearchPanel/SearchPanel.vue'
 import AddEvent from '@/components/AddEvent/AddEvent.vue'
@@ -14,22 +14,22 @@ export default defineComponent({
   setup() {
     const addEventDialogOpen = ref<boolean>(false)
     const eventListOpen = ref<boolean>(false)
-    const twoEvents = ref<Array<Object>>([])
+    const twoEvents = ref<Array<UserEvent>>([])
 
     const userStore = useUserStore()
 
     onMounted(async () => {
       await userStore.fetchUserEvents()
+    })
+
+    watchEffect(() => {
+      console.log('Events changed:', userStore.events)
       if (userStore.events) {
         const max = userStore.events.length < 2 ? userStore.events.length : 2
         for (let i = 0; i < max; i++) {
           twoEvents.value.push(userStore.events[i])
         }
       }
-    })
-
-    watchEffect(() => {
-      console.log('Events changed:', userStore.events)
     })
 
     const openAddEventDialog = () => {
