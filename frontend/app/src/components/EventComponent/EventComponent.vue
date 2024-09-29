@@ -11,7 +11,7 @@
         <p class="event__place">{{ event.place }}</p>
         <p class="event__location">Office meeting</p>
       </div>
-      <div class="event__buttons">
+      <div class="event__buttons" @click="goToEventDetails">
         <div class="event__clickMe">
           <p>c</p>
           <p>li</p>

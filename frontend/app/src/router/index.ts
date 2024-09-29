@@ -3,6 +3,8 @@ import LandingPage from '@/page/LandingPage/LandingPage.vue'
 import LoginPage from '@/page/LoginPage/LoginPage.vue'
 import RegisterPage from '@/page/RegisterPage/RegisterPage.vue'
 import UserPage from '@/page/UserPage/UserPage.vue'
+import MainPage from '@/page/MainPage/MainPage.vue'
+import EventDetailsPage from '@/page/EventDetailsPage/EventDetailsPage.vue'
 import { isAuthenticated } from '../utils/auth.js'
 
 const routes = [
@@ -27,7 +29,20 @@ const routes = [
     path: '/confnect',
     name: 'UserPage',
     component: UserPage,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: '',
+        name: 'MainPage',
+        component: MainPage
+      },
+      {
+        path: ':id',
+        name: 'EventDetails',
+        component: EventDetailsPage,
+        props: true
+      }
+    ]
   }
 ]
 

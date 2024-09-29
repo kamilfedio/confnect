@@ -71,6 +71,10 @@
     color: $mainGreen;
     height: 100%;
     flex-grow: 1;
+
+    :hover {
+      cursor: pointer;
+    }
   }
 
   &__clickMe {

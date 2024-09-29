@@ -1,0 +1,111 @@
+.welcome {
+  position: relative;
+  font-size: 2.4rem;
+  color: $mainDarkBlue;
+  margin-left: 15px;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: -15px;
+    bottom: -5px;
+    width: 15%;
+    height: 3px;
+    background-color: $mainGreen;
+    transform: skewX(-10deg);
+    transform-origin: left;
+  }
+}
+
+.mainPage {
+  .section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 50px;
+
+    &__title {
+      font-size: 4em;
+      text-align: center;
+      color: $mainDarkBlue;
+      font-weight: normal;
+      margin-top: 60px;
+      padding-bottom: 30px;
+    }
+
+    &__blocks {
+      display: flex;
+      width: 30%;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      margin: 0 auto;
+    }
+
+    &__block {
+      flex-basis: 30%;
+      font-size: 1.2em;
+      font-weight: normal;
+      text-align: center;
+      color: $mainDarkBlue;
+      background-color: $lightGrey;
+      border-radius: 20px;
+      padding: 6px 12px;
+      margin: 6px 0;
+      letter-spacing: 1px;
+    }
+
+    &__text {
+      text-align: center;
+      font-size: 1.2rem;
+      margin: 20px auto 50px auto;
+      width: 20%;
+    }
+  }
+
+  .mainSection {
+    display: flex;
+    justify-content: space-around;
+    margin: 0 auto;
+    width: 80%;
+
+    &__allEvents {
+      text-align: center;
+      font-size: 1.6rem;
+      text-decoration: underline;
+      letter-spacing: 1px;
+      color: $mainDarkBlue;
+      cursor: pointer;
+
+      &:hover {
+        font-size: 1.7rem;
+      }
+    }
+
+    .addEvent {
+      position: relative;
+      display: flex;
+      width: 532px;
+      height: 200px;
+      background-color: $lightGrey;
+      border-radius: 40px 0 0 40px;
+      margin-bottom: 50px;
+      cursor: pointer;
+
+      &__txt {
+        position: absolute;
+        color: $mainWhite;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 3.2rem;
+        transition: 0.3s;
+      }
+
+      &:hover {
+        .addEvent__txt {
+          font-size: 4rem;
+        }
+      }
+    }
+  }
+}
