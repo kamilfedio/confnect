@@ -20,27 +20,10 @@ quizes, polls or other our features!
 - generate invitation codes
 - ask live questions
 - send feedback
-- send forms on launch page
 
-### 0.0.2
-- view questions after meet (optional)
-- reply to questions after meet (optional)
-- notifications about new replies for attendances (optional)
-
-### 0.0.3
-- create votes
-- generate votes statistics
-
-### 0.1.0
-- send reviews
-- check admins profiles
-- set events to mode: private | public
-
-### 0.1.1
-- create polls
-
-### 0.1.2 
-- create quizes
+## Notes
+Frontend is not ready to use. Backend is finished. Copy `.env.sample` to `.env`. If you need some private info for development
+      -> contact me kamilf827@gmail.com
 
 ## How to run
 ### To run backend
