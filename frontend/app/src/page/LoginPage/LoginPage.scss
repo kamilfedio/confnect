@@ -1,0 +1,115 @@
+.loginPage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 40px;
+  width: 55%;
+  height: 59vh;
+  background-color: $mainGreen;
+  border-right: 3px solid $mainDarkBlue;
+
+  &__logo {
+    position: absolute;
+    top: 10%;
+    left: 36%;
+    z-index: 10;
+    border-radius: 40px;
+
+    img {
+      padding: 35px;
+    }
+  }
+
+  &__image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-image: url('../../img/loginImg1.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    width: 45%;
+    height: 100%;
+    transform: scaleX(-1);
+  }
+
+  &__part {
+    position: absolute;
+    top: 10%;
+    left: 0;
+    width: 90px;
+    height: 132px;
+    background-color: $mainGreen;
+    border-radius: 0 40px 40px 0;
+    border: 3px solid $mainDarkBlue;
+    border-left: none;
+  }
+
+  &__btn {
+    position: absolute;
+    top: 50%;
+    right: 51%;
+    transform: translateX(-50%);
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    font-size: 1.6rem;
+    text-transform: uppercase;
+    color: $mainWhite;
+    line-height: 20px;
+    letter-spacing: 0.3em;
+    cursor: pointer;
+  }
+  .loginForm {
+    position: absolute;
+    right: 6%;
+    bottom: 20%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 40%;
+
+    &__text {
+      color: $mainWhite;
+      font-size: 1.6rem;
+      text-align: center;
+      width: 70%;
+      letter-spacing: 1px;
+    }
+
+    &__form {
+      display: flex;
+      flex-direction: column;
+      width: 55%;
+    }
+
+    &__input {
+      height: 35px;
+      border-radius: 40px;
+      border: none;
+      margin-top: 20px;
+      padding: 10px 0 10px 20px;
+
+      &::placeholder {
+        color: $mainBlack;
+      }
+    }
+
+    &__btn {
+      border: 2px solid $mainDarkBlue;
+      border-radius: 40px;
+      color: $mainDarkBlue;
+      background-color: transparent;
+      line-height: 45px;
+      font-size: 1.6rem;
+      transition: 0.3s;
+      margin-top: 30px;
+
+      &:hover {
+        color: $mainBgc;
+        background-color: $mainDarkBlue;
+        cursor: pointer;
+      }
+    }
+  }
+}

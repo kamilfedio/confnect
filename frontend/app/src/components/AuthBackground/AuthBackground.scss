@@ -1,0 +1,28 @@
+.bubblesBackground {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  &__image1 {
+    position: absolute;
+    top: 168px;
+    left: 0;
+  }
+  &__image2 {
+    position: absolute;
+    top: 0;
+    left: 78px;
+  }
+  &__image3 {
+    position: absolute;
+    right: 0;
+    bottom: 210px;
+  }
+  &__image4 {
+    position: absolute;
+    right: 70px;
+    bottom: 0;
+  }
+}

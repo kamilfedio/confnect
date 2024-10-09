@@ -1,0 +1,113 @@
+.searchPanel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 200px;
+  width: 330px;
+  color: $mainDarkBlue;
+  margin-bottom: 50px;
+
+  &__title {
+    font-size: 3.2rem;
+  }
+
+  &__input {
+    width: 100%;
+    border-radius: 0 40px 40px 0;
+    background-color: $lightGrey;
+    border: none;
+    padding: 10px;
+
+    &::placeholder {
+      color: $mainBlack;
+    }
+  }
+
+  &__status {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__statusType {
+    font-size: 1.6rem;
+    padding: 10px 20px;
+    border-radius: 40px;
+
+    &.active {
+      color: $mainWhite;
+      background-color: $mainDarkBlue;
+    }
+
+    &:hover {
+      color: $mainWhite;
+      background-color: $mainDarkBlue;
+      cursor: pointer;
+    }
+  }
+
+  &__sort {
+    display: flex;
+  }
+
+  &__sortBy,
+  &__ascending {
+    display: flex;
+    flex-wrap: wrap;
+    font-size: 1.1rem;
+    width: 110px;
+    justify-content: space-between;
+  }
+
+  &__ascending {
+    width: 80px;
+  }
+
+  .sortBy,
+  .ascending {
+    margin-right: 30px;
+
+    &__title {
+      width: 100%;
+      padding: 10px 0;
+    }
+
+    &__date,
+    &__status,
+    &__arrow {
+      padding: 5px 10px;
+      border-radius: 40px;
+      font-size: 1.4rem;
+
+      &:hover {
+        color: $mainWhite;
+        background-color: $mainDarkBlue;
+        cursor: pointer;
+      }
+
+      &.active {
+        color: $mainWhite;
+        background-color: $mainDarkBlue;
+      }
+
+      &:hover {
+        color: $mainWhite;
+        background-color: $mainDarkBlue;
+      }
+    }
+
+    &__arrow {
+      width: 35px;
+      height: 15px;
+      padding: 0 10px;
+      text-align: center;
+
+      img {
+        height: 100%;
+      }
+    }
+
+    &__arrow:nth-child(2) img {
+      transform: rotate(180deg);
+    }
+  }
+}

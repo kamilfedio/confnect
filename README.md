@@ -1,5 +1,9 @@
 # confnect
-To see current version change branch to dev :D
+STACK:
+- vue.js
+- FastAPI
+- Postgresql
+- Docker
 
 ## Description
 App dedicated to conferences, admins, managers etc. Usually at big events are sections where users can ask.
@@ -16,23 +20,21 @@ quizes, polls or other our features!
 - generate invitation codes
 - ask live questions
 - send feedback
-- send forms
 
-### 0.0.2
-- view questions after meet
-- reply to questions after meet
-- notifications about new replies for attendances
+## Notes
+Frontend is not ready to use. Backend is finished. Copy `.env.sample` to `.env`. If you need some private info for development
+      -> contact me kamilf827@gmail.com
 
-### 0.0.3
-- create votes
-- generate votes statistics
+## How to run
+### To run backend
+`cd backend`
+`docker-compose build`
+`docker-compose up`
+link: `http://0.0.0.0:8000/`
+docs: `http://0.0.0.0:8000/docs`
 
-### 0.1.0
-- send reviews
-- check admins profiles
-
-### 0.1.1
-- create polls
-
-### 0.1.2 
-- create quizes
+## dev run
+`redis-server`
+`poetry run celery -A source.celery.celery_app worker --loglevel=info`
+`poetry run celery -A source.celery.celery_app beat --loglevel=info`
+`poetry run uvicorn source.main:app --reload`

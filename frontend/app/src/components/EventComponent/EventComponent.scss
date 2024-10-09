@@ -1,0 +1,107 @@
+.event {
+  display: flex;
+  width: 532px;
+  height: 200px;
+  background-color: $mainDarkBlue;
+  border-radius: 40px 0 0 40px;
+  margin-bottom: 50px;
+
+  &__img {
+    position: relative;
+    top: 50%;
+    left: 3px;
+    transform: translateY(-50%);
+    width: 40%;
+    height: 98%;
+    background-image: url('../../img/eventImg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  &__data {
+    flex-grow: 1;
+    display: flex;
+  }
+
+  &__informations {
+    width: 85%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    color: $mainBgc;
+    padding: 10px 0 10px 18px;
+  }
+
+  &__number {
+    font-size: 6.4rem;
+    color: $lightGrey;
+    opacity: 0.1;
+    justify-self: flex-start;
+    flex-grow: 1;
+    padding-top: 10px;
+  }
+
+  &__status {
+    font-size: 1.2rem;
+    line-height: 1.7rem;
+  }
+
+  &__statusDate {
+    color: $mainGreen;
+  }
+
+  &__date {
+    font-size: 1.5rem;
+    line-height: 1.7rem;
+  }
+
+  &__place {
+    font-size: 1.2rem;
+    line-height: 1.7rem;
+  }
+
+  &__location {
+    font-size: 1.5rem;
+    line-height: 2.4rem;
+  }
+
+  &__buttons {
+    position: relative;
+    color: $mainGreen;
+    height: 100%;
+    flex-grow: 1;
+
+    :hover {
+      cursor: pointer;
+    }
+  }
+
+  &__clickMe {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 1.5rem;
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    letter-spacing: 1px;
+
+    & p:nth-child(3) {
+      writing-mode: vertical-rl;
+      text-orientation: upright;
+      margin: 0 auto;
+    }
+  }
+
+  &__arrowBtn {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 15px;
+    width: 25px;
+    height: 25px;
+  }
+}

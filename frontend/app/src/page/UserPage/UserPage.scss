@@ -1,0 +1,65 @@
+.wrapper {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  overflow: hidden;
+  padding: 20px 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+header {
+  height: 20vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  .topPanel {
+    display: flex;
+    justify-content: space-between;
+
+    &__logo {
+      width: 165px;
+      height: 41px;
+    }
+
+    &__profile {
+      display: flex;
+    }
+
+    .profile {
+      &__name {
+        color: $mainDarkBlue;
+        margin-right: 10px;
+      }
+
+      &__firstName {
+        font-size: 2.4rem;
+      }
+
+      &__surName {
+        font-size: 1.6rem;
+      }
+
+      &__img {
+        position: relative;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: $mainGreen;
+        border: 1px solid black;
+
+        &::after {
+          content: '';
+          position: absolute;
+          right: 20px;
+          bottom: -5px;
+          width: 60px;
+          height: 3px;
+          background-color: $mainGreen;
+          transform: skewX(-10deg);
+          transform-origin: left;
+        }
+      }
+    }
+  }
+}
