@@ -65,7 +65,11 @@ router.beforeEach((to, from, next) => {
     if (!isAuthenticated()) {
       next({ name: 'LoginPage' })
     } else {
-      next()
+      if (to.name === 'UserPage' && to.path === '/confnect') {
+        next({ name: 'MainPage' })
+      } else {
+        next()
+      }
     }
   } else {
     next()

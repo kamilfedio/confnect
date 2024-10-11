@@ -26,10 +26,12 @@ export default defineComponent({
       console.log('Events changed:', userStore.events)
       if (userStore.events) {
         const max = userStore.events.length < 2 ? userStore.events.length : 2
+        twoEvents.value = []
         for (let i = 0; i < max; i++) {
           twoEvents.value.push(userStore.events[i])
         }
       }
+      console.log(twoEvents)
     })
 
     const openAddEventDialog = () => {
