@@ -12,7 +12,7 @@ email.set_content('<p>abc</p>')
 
 async def mail():
     async with aiosmtplib.SMTP(hostname='smtp.gmail.com', port=587) as smtp:
-        await smtp.login('kgx.dev@gmail.com', 'shzcqyvmafqvfdkd')
+        await smtp.login('', '')
         await smtp.send_message(email)
         print('sent')
 
